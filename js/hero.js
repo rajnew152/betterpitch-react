@@ -9,7 +9,7 @@
   "use strict";
   const { animate, set, clamp, prefersReducedMotion } = LiaMotion;
   const progressListeners = [];
-  const CARD_SLOWDOWN = 1.4; // >1 = feature cards move slower per scroll distance
+  const CARD_SLOWDOWN = 2.1; // >1 = feature cards move slower per scroll distance
   let hero, left, center, orbWrap, overlay, rail, reveal, timeline = null, ctx = null;
   let waveform = null, breakpointKey = "";
 

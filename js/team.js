@@ -22,19 +22,41 @@
       const members = modal.querySelectorAll(".team-modal__member");
       const closeBtn = modal.querySelector(".team-modal__close");
       const scrim = modal.querySelector(".team-modal__scrim");
+      const card = modal.querySelector(".team-modal__card");
       let opener = null;
+      /* the card grows out of (and shrinks back into) the row's "+" button: its
+         offset from the viewport centre, where the flex-centred card sits */
+      const aimAt = (row) => {
+        if (!card) return;
+        const plus = (row && row.querySelector(".team-row__plus")) || row;
+        if (!plus) return;
+        const r = plus.getBoundingClientRect();
+        card.style.setProperty("--tm-from-x", Math.round(r.left + r.width / 2 - window.innerWidth / 2) + "px");
+        card.style.setProperty("--tm-from-y", Math.round(r.top + r.height / 2 - window.innerHeight / 2) + "px");
+      };
       const open = (id) => {
         members.forEach((m) => m.classList.toggle("is-active", m.dataset.member === id));
+        aimAt(opener);
+        if (card) card.scrollTop = 0;
+        if (opener) opener.classList.add("is-opener");
+        /* commit the start state before .is-open, so the entrance always plays */
+        void modal.offsetWidth;
         modal.classList.add("is-open");
         modal.setAttribute("aria-hidden", "false");
         document.body.style.overflow = "hidden";
-        if (closeBtn) closeBtn.focus();
+        if (closeBtn) closeBtn.focus({ preventScroll: true });
       };
       const close = () => {
+        if (!modal.classList.contains("is-open")) return;
+        aimAt(opener);
         modal.classList.remove("is-open");
         modal.setAttribute("aria-hidden", "true");
         document.body.style.overflow = "";
-        if (opener) { opener.focus(); opener = null; }
+        if (opener) {
+          opener.classList.remove("is-opener");
+          opener.focus({ preventScroll: true });
+          opener = null;
+        }
       };
       /* delegated at the document level: the rows live inside ScrollTrigger's
          pinned scene, whose pin-spacers re-parent elements — this keeps the

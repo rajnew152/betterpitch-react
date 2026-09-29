@@ -53,10 +53,14 @@
       const done = spring.step(dt);
       morph.style.width = `${spring.value}px`;
       raf = done ? 0 : requestAnimationFrame(tickWidth);
+      /* phones park the resting orb in the corner (css/mobile.css); it stays centred
+         until the pill has fully shrunk back */
+      if (done && !expanded) launcher.classList.remove("is-expanded");
     }
     function setExpanded(next) {
       if (expanded === next) return;
       expanded = next;
+      if (next) launcher.classList.add("is-expanded");
       spring.target = next ? targetWidth() : 62;
       if (!raf) { lastT = performance.now(); raf = requestAnimationFrame(tickWidth); }
       morph.style.cursor = next ? "default" : "pointer";

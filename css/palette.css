@@ -73,6 +73,35 @@ html.light #section-cinematic-project .light\:text-\[\#4b4560\]\/85 { color: #8f
 .tk, .tk__container { background: #151519; }
 .nx, .nx__container { background: #000000; }
 
+/* journey → Platform deck: the journey section ends on pure black while the deck's
+   stage is #151519 with brand glows in its top corners (css/card-flip.css), so the
+   two met in a hard line and read as separate slabs. A feathered black band over the
+   stage's top edge lets the grey and the glows rise out of the black gradually (same
+   mask-over-flat-fill recipe as .bp-seam above — gradient stops of color-mix() banded
+   in Chromium). Dark theme only: in the light theme both sections already sit on the
+   same #fdf9fb ground, so there is no seam to hide. */
+html:not(.light) #section-toolkit .tk__container::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 0;
+  height: 36vh;
+  pointer-events: none;
+  background: #000000;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.82) 22%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.18) 78%, transparent 100%);
+          mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.82) 22%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.18) 78%, transparent 100%);
+}
+/* and soften the deck's own ground the same way: the flat #151519 becomes a vertical
+   ramp that starts black at the seam and settles on #151519 by mid-stage, so even the
+   base colour has no visible step against the section above */
+html:not(.light) #section-toolkit .tk__container {
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 105%, rgba(247, 54, 121, 0.30), transparent 70%),
+    radial-gradient(circle at 12% 18%, rgba(155, 124, 255, 0.20), transparent 42%),
+    radial-gradient(circle at 88% 22%, rgba(255, 122, 69, 0.18), transparent 42%),
+    linear-gradient(180deg, #000000 0%, #0a0a0d 18%, #151519 42%, #151519 100%);
+}
+
 /* ROI stage → FAQ: the FAQ's top glow is no longer cut off at the section's top
    edge; it spills up over the ROI stage (sides and bottom stay clipped), so the
    two light sections read as one surface */

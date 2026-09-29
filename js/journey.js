@@ -8,7 +8,7 @@
    ============================================================================= */
 (function () {
   "use strict";
-  const CREAM = "#f5e7df", DARK = "#1f1d1d", BLACK = "#0a0a0a";
+  const CREAM = "#f5e7df", DARK = "#1f1d1d", BLACK = "#000000";
   /* scroll-scrubbed strengths read by js/journey-fluid.js */
   const fluid = { idle: 0, interaction: 0, zoom: 1 };
 
@@ -46,6 +46,25 @@
     const sentenceEnd = () => "+=" + (pinHeight.offsetHeight - (team ? team.offsetHeight : 0) - window.innerHeight);
 
     sentences.forEach(splitLetters);
+
+    /* gradient words (css/journey-toolkit.css): give every letter the word width
+       and its own offset so the letters together show one continuous gradient.
+       offsetLeft ignores transforms, so the scroll animation never skews it. */
+    const gradWords = sentences.filter((s) => s.classList.contains("is-today") || s.classList.contains("is-dialogue"));
+    const sizeGradient = () => gradWords.forEach((s) => {
+      const letters = Array.from(s.querySelectorAll(".letter"));
+      if (!letters.length) return;
+      const x0 = letters[0].offsetLeft;
+      const last = letters[letters.length - 1];
+      const w = last.offsetLeft + last.offsetWidth - x0;
+      letters.forEach((l) => {
+        l.style.setProperty("--gw", w + "px");
+        l.style.setProperty("--gx", (l.offsetLeft - x0) + "px");
+      });
+    });
+    sizeGradient();
+    ScrollTrigger.addEventListener("refreshInit", sizeGradient);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(sizeGradient);
     const first = sentences[0];
     const last = sentences[sentences.length - 1];
 
@@ -98,9 +117,35 @@
     const above = { yPercent: -50, y: () => -container.clientHeight * 0.5 };
     const rest = { yPercent: 0, y: 0 };
 
-    /* no empty hold before the first sentence: it starts rising as the stage arrives */
-    tl.fromTo(first, below, { ...rest, ease: "power3.out", immediateRender: true });
-    tl.fromTo(first.querySelectorAll("span"), below, { ...rest, ease: "power3.out", stagger: 0.02, immediateRender: true }, "<");
+    /* no empty dark screen between the wheel hand-off and "Emotion": the first
+       sentence performs its original smooth staggered rise (same ease and letter
+       stagger as before), played in real time as the stage scrolls into view, so
+       it is already centred by the time the pin starts */
+    const entry = gsap.timeline({ paused: true });
+    entry.fromTo(first, below, { ...rest, duration: 1.1, ease: "power3.out", immediateRender: true });
+    entry.fromTo(first.querySelectorAll("span"), below, { ...rest, duration: 1.1, ease: "power3.out", stagger: 0.02, immediateRender: true }, "<");
+    /* hold in place of the old in-pin rise so the rest of the timeline keeps its pacing */
+    tl.to({}, { duration: 1 });
+    tl.addLabel("firstOut");
+    /* the entry (real time) and the scrubbed exit below write the same y / yPercent on
+       the same letters. Once the scroll reaches the exit — a fast scroll during the
+       1.1s rise, a reload or a section-nav jump into the pin — the entry must stop
+       writing, or it keeps pulling "Emotion" back to the centre over "meets" */
+    const pastEntry = () => tl.time() > tl.labels.firstOut;
+    const releaseEntry = () => {
+      if (!entry.isActive() || !pastEntry()) return;
+      entry.pause();
+      /* the entry may have written last this frame: redraw the scrubbed state now
+         (a nudge and back, events suppressed) instead of waiting for the next scroll */
+      const t = tl.time();
+      tl.time(t + 0.0001, true).time(t, true);
+    };
+    ScrollTrigger.create({
+      trigger: root,
+      start: "top 85%",
+      onEnter: () => { if (!pastEntry()) entry.play(); },
+      onLeaveBack: () => entry.reverse(),
+    });
 
     sentences.forEach((s, i) => {
       const next = sentences[i + 1];
@@ -113,8 +158,10 @@
            sentence keeps its cream letters (as on the reference once its letters
            carry the cream fill), so cream-on-cream it only reads through the
            gradient cards as they slide in and meet */
-        tl.set(container, { backgroundColor: CREAM }, "<+=0.2");
-        tl.set(sentences.filter((el) => !el.classList.contains("is-both")), { color: DARK }, "<");
+        /* smooth dark -> cream crossfade (was an instant set): the stage and the
+           centred sentence fade together over a stretch of scroll */
+        tl.to(container, { backgroundColor: CREAM, duration: 0.6, ease: "sine.inOut" }, "<+=0.2");
+        tl.to(sentences.filter((el) => !el.classList.contains("is-both")), { color: DARK, duration: 0.6, ease: "sine.inOut" }, "<");
       }
       if (both) {
         tl.fromTo(left, { xPercent: -101, opacity: 0 }, { xPercent: -30, opacity: 1, ease: "power3.out" }, "<+=0.15");
@@ -152,15 +199,19 @@
 
     /* hover-to-fill is live from the play phase on, including the section's end
        and the hand-off, where the outlined text is still on screen */
+    let togglePlay = null;
     if (playSentence && finePointer) {
-      const togglePlay = () => {
+      togglePlay = () => {
         const t = tl.labels.fluidPlay;
         playSentence.classList.toggle("is-pointer-play", t !== undefined && tl.time() >= t);
       };
-      tl.eventCallback("onUpdate", togglePlay);
       ScrollTrigger.addEventListener("refresh", togglePlay);
       togglePlay();
     }
+    /* one onUpdate per timeline (eventCallback replaces): checked from both sides, so
+       the entry lets go whether the scroll moves on or the rise is still ticking */
+    tl.eventCallback("onUpdate", () => { releaseEntry(); if (togglePlay) togglePlay(); });
+    entry.eventCallback("onUpdate", releaseEntry);
 
     /* hand-off: as the Toolkit section arrives the stage shrinks into a rounded strip */
     const toolkit = document.getElementById("section-toolkit");

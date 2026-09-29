@@ -38,6 +38,9 @@
      (0.6 ≈ 96vw on screen), centred — small enough that its curvature reads
      as a real globe instead of a flat horizon */
   const SPHERE_W = 0.6;
+  /* highest the planet's crest may reach, as a fraction of the section height
+     measured from its bottom (js: resize caps the globe size with it) */
+  const CREST = 0.72;
 
   const NOISE = `
     vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}
@@ -304,7 +307,11 @@
 
     let D = 0, cw = 0, chh = 0, S = 0, headPx = 0;
     function resize() {
-      D = holder.clientWidth || 1;
+      /* D follows the holder's width (160vw), but the planet's top sits 0.14·D above
+         the section's bottom: on short windows that ran past the section's top edge,
+         which sliced the limb and its glow flat. Cap D so the dome's crest stays at
+         most CREST of the section's height, leaving room for the atmosphere above. */
+      D = Math.max(1, Math.min(holder.clientWidth || 1, (section.clientHeight * CREST) / 0.14));
       const k = Math.min(window.devicePixelRatio || 1, 1.5);
       cw = Math.min(MAX_W, Math.round(D * k));
       headPx = Math.round(D * HEAD * (cw / D));
@@ -318,7 +325,9 @@
       canvas.style.bottom = (-0.10 * D) + "px";
     }
     resize();
-    new ResizeObserver(resize).observe(holder);
+    const ro = new ResizeObserver(resize);
+    ro.observe(holder);
+    ro.observe(section);
 
     /* ---- interaction state, mirroring the reference loop ---- */
     let dragging = false, last = { x: 0, y: 0 }, B = { x: 0, y: 0 };

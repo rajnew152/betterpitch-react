@@ -6,7 +6,7 @@
    ============================================================================= */
 :root {
   --gz-cream: #f5e7df;
-  --gz-dark: #1f1d1d;
+  --gz-dark: #000000;
   --gz-black: #0a0a0a;
   --gz-font: "Geist", "Geist Fallback", Arial, Helvetica, sans-serif;
 }
@@ -19,7 +19,7 @@
   color: var(--gz-cream);
   font-family: var(--gz-font);
 }
-.traj__pin-height { height: 600vh; }
+.traj__pin-height { height: 1100vh; }
 .traj__container {
   position: relative;
   display: flex;
@@ -67,6 +67,33 @@
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC45IiBudW1PY3RhdmVzPSIyIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdmFsdWVzPSIwIDAgMCAwIDEgMCAwIDAgMCAxIDAgMCAwIDAgMSAwIDAgMCAwLjYgMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNuKSIvPjwvc3ZnPg==");
   pointer-events: none;
 }
+/* brand gradient on "Emotion" and "meets": one gradient across the whole word,
+   orange → pink → magenta → violet (the same run as the slices beside "meets").
+   Each letter is its own animated span, so each paints its slice of the word-wide
+   gradient: js/journey.js sets --gw (word width) and --gx (letter offset).
+   Night stops are brighter (they start on black, end on cream); day stops are
+   deeper so they hold up on the near-white stage. */
+.traj__sentence.is-today,
+.traj__sentence.is-dialogue {
+  --traj-grad: linear-gradient(90deg, #ff6a3d 0%, #f73679 38%, #e232db 68%, #8b5cf6 100%);
+}
+html.light .traj__sentence.is-today,
+html.light .traj__sentence.is-dialogue {
+  --traj-grad: linear-gradient(90deg, #e8502f 0%, #d81b60 38%, #b5179e 68%, #6d28d9 100%);
+}
+.traj__sentence.is-today .letter,
+.traj__sentence.is-dialogue .letter {
+  background-image: var(--traj-grad);
+  background-size: var(--gw, 100%) 100%;
+  background-position: calc(var(--gx, 0px) * -1) 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* room for descenders / overshoot so the clip never shaves glyph edges */
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
 @media (max-width: 768px) {
   .traj__pin-height { height: 480vh; }
   .traj__sentence { font-size: clamp(42px, 12vw, 60px); }
@@ -83,7 +110,7 @@
 .tk__pin-height { height: 700vh; }
 /* art-direction deck only (tools/brand-content.js drops the front-end deck): the
    art phases keep the scroll length they had inside the full 700vh sequence */
-.tk--art-only .tk__pin-height { height: 330vh; } /* includes a hold with the fan fully open (js/toolkit.js) */
+.tk--art-only .tk__pin-height { height: 1150vh; } /* includes a hold with the fan fully open (js/toolkit.js) */
 .tk__container {
   position: relative;
   z-index: 1;

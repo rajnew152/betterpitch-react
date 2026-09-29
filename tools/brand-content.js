@@ -493,7 +493,10 @@ r(/(\n\n<!-- =+ -->\n<!-- "I create experiences…" manifesto[\s\S]*?\n<\/sectio
 r(/\n(?=<!-- =+ -->\n<section id="section-cinematic-project")/,
   require("fs").readFileSync(require("path").join(__dirname, "manifesto-section.html"), "utf8").trimEnd()
     .replace("Plays after the Platform deck, before the ROI calculator; inserted by  ", "Second copy, between the feature carousel and the industries wheel; by  ")
-    .replace('id="section-manifesto"', 'id="section-manifesto-intro"').replace(/\$/g, "$$$$") + "\n\n");
+    .replace('id="section-manifesto"', 'id="section-manifesto-intro"')
+    /* the intro copy keeps the original line; the ROI copy leads into the calculator */
+    .replace("Now see what every call is worth.", "We deploy your entire calling workflow and run it for you.")
+    .replace(/\$/g, "$$$$") + "\n\n");
 
 function apply(html) {
   ld = 0;

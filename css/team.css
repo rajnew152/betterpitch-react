@@ -44,8 +44,16 @@
   will-change: transform, opacity;
 }
 
+/* ScrollTrigger wraps each pinned element in a .pin-spacer that copies its
+   z-index, position, size and margins but not its pointer-events. The title's
+   spacer (z-index 10, 100vh tall, pulled back by the -100vh margin) therefore sat
+   invisibly over the whole panel and swallowed every click on the rows and the
+   hiring button. Spacers here pass clicks through; the panel takes them back. */
+.traj__team .pin-spacer { pointer-events: none; }
+
 /* ── the panel: one viewport, list left / hiring card right ── */
 .team-panel {
+  pointer-events: auto;
   position: relative;
   display: flex;
   align-items: flex-start;
@@ -160,7 +168,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 15%;
+  object-position: 40% 30%;   /* landscape interview shot: keeps the interviewer in frame */
 }
 .team-hire::after {
   content: "";
@@ -210,39 +218,74 @@
   background: currentColor;
 }
 
-/* ── member profile dialog (js/team.js moves it to <body> and toggles it) ── */
+/* ── member profile dialog (js/team.js moves it to <body> and toggles it) ──
+   kora-style entrance: the card grows out of the clicked "+" (js/team.js sets
+   --tm-from-x / --tm-from-y to the button's offset from the viewport centre) with a
+   slight spring, the backdrop fades and blurs in, then the photo wipes open and the
+   copy rises in a stagger. Closing runs the card back into the button, faster and
+   without the stagger (the delays live only on the .is-open rules). */
 .team-modal {
+  /* it lives on <body>, outside .traj__team, so it needs its own copy of the tokens */
+  --team-cream: #fdf7f0;
+  --team-ink: #241827;
+  --tm-spring: cubic-bezier(0.2, 1.18, 0.32, 1);
+  --tm-out: cubic-bezier(0.55, 0, 0.75, 0.2);
   position: fixed;
   inset: 0;
   z-index: 10000;
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
   font-family: var(--gz-font);
+  visibility: hidden;
+  pointer-events: none;
+  transition: visibility 0s linear 0.42s;
 }
-.team-modal.is-open { display: flex; }
+.team-modal.is-open {
+  visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
+}
 .team-modal__scrim {
   position: absolute;
   inset: 0;
   background: rgba(24, 8, 22, 0.45);
+  opacity: 0;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition: opacity 0.38s ease, backdrop-filter 0.38s ease, -webkit-backdrop-filter 0.38s ease;
+}
+.team-modal.is-open .team-modal__scrim {
+  opacity: 1;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
+  transition-duration: 0.5s;
 }
 .team-modal__card {
   position: relative;
-  width: min(880px, 96vw);
+  width: min(1000px, 96vw);
   max-height: 90vh;
   overflow: auto;
-  border-radius: 26px;
-  background: #fdfaf6;
+  padding: 12px;
+  border-radius: 34px;
+  background: #f3ece1;
   color: var(--team-ink);
   box-shadow: 0 40px 120px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transform: translate(var(--tm-from-x, 0px), var(--tm-from-y, 40px)) scale(0.12);
+  transition: transform 0.4s var(--tm-out), opacity 0.22s ease 0.16s;
+  will-change: transform, opacity;
+}
+.team-modal.is-open .team-modal__card {
+  opacity: 1;
+  transform: none;
+  transition: transform 0.75s var(--tm-spring), opacity 0.2s ease;
 }
 .team-modal__close {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 30px;
+  right: 30px;
   z-index: 2;
   display: grid;
   place-items: center;
@@ -250,26 +293,39 @@
   height: 36px;
   border: 0;
   border-radius: 50%;
-  background: rgba(36, 24, 39, 0.07);
+  background: rgba(36, 24, 39, 0.06);
   color: var(--team-ink);
-  font-size: 20px;
+  font-size: 24px;
   line-height: 1;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.6);
+  transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.25s ease;
+}
+.team-modal.is-open .team-modal__close {
+  opacity: 1;
+  transform: none;
+  transition: background-color 0.2s ease, opacity 0.3s ease 0.45s, transform 0.5s var(--tm-spring) 0.45s;
 }
 .team-modal__close:hover { background: rgba(36, 24, 39, 0.14); }
+.team-modal.is-open .team-modal__close:hover { transform: rotate(90deg); transition-delay: 0s; }
 .team-modal__member {
   display: none;
-  grid-template-columns: 0.85fr 1.15fr;
-  gap: clamp(14px, 2vw, 22px);
-  padding: 14px;
+  grid-template-columns: 0.72fr 1.28fr;
+  gap: 12px;
 }
 .team-modal__member.is-active { display: grid; }
 .team-modal__photo {
-  min-height: 340px;
+  min-height: 380px;
   overflow: hidden;
-  border-radius: 18px;
+  border-radius: 24px;
   background: linear-gradient(180deg, #a9bff0 0%, #d7e2f8 100%);
+  clip-path: inset(0 0 100% 0 round 24px);
+  transition: clip-path 0.3s ease;
+}
+.team-modal.is-open .team-modal__photo {
+  clip-path: inset(0 0 0 0 round 24px);
+  transition: clip-path 0.8s cubic-bezier(0.65, 0, 0.2, 1) 0.18s;
 }
 .team-modal__photo img {
   display: block;
@@ -277,12 +333,52 @@
   height: 100%;
   object-fit: cover;
   object-position: 50% 20%;
+  transform: scale(1.18);
+  transition: transform 0.3s ease;
+}
+.team-modal.is-open .team-modal__photo img {
+  transform: none;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.18s;
 }
 .team-modal__body {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: clamp(16px, 3vw, 30px) clamp(16px, 3vw, 30px) clamp(16px, 3vw, 26px) clamp(6px, 1vw, 10px);
+  padding: clamp(22px, 3.4vw, 40px);
+  border-radius: 24px;
+  background: #fffdf8;
+}
+/* copy rises in one line after another */
+.team-modal__kicker,
+.team-modal__name,
+.team-modal__bio,
+.team-modal__foot {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.team-modal.is-open .team-modal__kicker,
+.team-modal.is-open .team-modal__name,
+.team-modal.is-open .team-modal__bio,
+.team-modal.is-open .team-modal__foot {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.55s ease, transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.team-modal.is-open .team-modal__kicker { transition-delay: 0.28s; }
+.team-modal.is-open .team-modal__name   { transition-delay: 0.34s; }
+.team-modal.is-open .team-modal__bio    { transition-delay: 0.42s; }
+.team-modal.is-open .team-modal__foot   { transition-delay: 0.5s; }
+/* the row's "+" turns into an "×" while its profile is open */
+.team-row.is-opener .team-row__plus {
+  transform: rotate(45deg);
+  background: var(--team-cream);
+  color: #6d1b4b;
+}
+@media (prefers-reduced-motion: reduce) {
+  .team-modal *,
+  .team-modal.is-open * { transition-duration: 0.01s !important; transition-delay: 0s !important; }
+  .team-modal__card { transform: none; }
 }
 .team-modal__kicker {
   margin: 0 0 6px;
@@ -318,15 +414,15 @@
 .team-modal__socials a {
   display: grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
-  border: 1px solid rgba(36, 24, 39, 0.18);
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
+  background: #f1ebe1;
   color: var(--team-ink);
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.25s ease;
 }
-.team-modal__socials a:hover { background: rgba(36, 24, 39, 0.08); }
-.team-modal__socials svg { width: 15px; height: 15px; }
+.team-modal__socials a:hover { background: #e6ddcf; transform: translateY(-2px); }
+.team-modal__socials svg { width: 18px; height: 18px; }
 .team-modal__email span {
   display: block;
   margin-bottom: 3px;
@@ -352,8 +448,10 @@
   .team-row__ava { width: 48px; height: 48px; }
   .team-hire { min-height: 30vh; }
   .team-modal__member { grid-template-columns: 1fr; }
+  .team-modal__card { padding: 10px; border-radius: 28px; }
   .team-modal__photo { min-height: 0; aspect-ratio: 4 / 3; }
-  .team-modal__body { padding: 6px 12px 16px; }
+  .team-modal__body { padding: 22px 18px 20px; }
+  .team-modal__close { top: 20px; right: 20px; background: rgba(253, 250, 246, 0.85); }
 }
 @media (prefers-reduced-motion: reduce) {
   .team-heading { height: auto; margin-bottom: 0; padding: 12vh 0 0; }

@@ -24,6 +24,28 @@
   pointer-events: none;
   z-index: 0;
 }
+/* night theme only: the wall sits on a deep plum-black panel that matches the
+   site's dark surfaces (the light pink panel above stays for the light theme).
+   The seam gradient is taller and eases through mid-opacity stops so the dark
+   section before it merges into the panel with no visible band. */
+html:not(.light) .tw {
+  background: #14060f;
+  color: #ffe9f4;
+}
+html:not(.light) .tw::before {
+  height: min(440px, 52vh);
+  background: linear-gradient(
+    180deg,
+    hsl(var(--background)) 0%,
+    hsl(var(--background) / 0.85) 30%,
+    hsl(var(--background) / 0.45) 62%,
+    hsl(var(--background) / 0) 100%
+  );
+}
+html:not(.light) .tw__lead { color: rgba(255, 233, 244, 0.62); }
+html:not(.light) .tw__rating-note { color: rgba(255, 233, 244, 0.78); }
+html:not(.light) .tw__trust { color: rgba(255, 233, 244, 0.48); }
+
 .tw__stage {
   position: relative;
   z-index: 1;

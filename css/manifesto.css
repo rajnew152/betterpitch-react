@@ -138,3 +138,30 @@ html.light .mf {
 @media (max-width: 600px) {
   .mf::before, .mf::after { height: 25vh; }
 }
+
+/* ------------------------------------------------------------------ manifesto → ROI
+   Night theme only. The second manifesto sits above the (black) ROI calculator,
+   not the wheel, so its maroon end is deepened and feathered into the ROI
+   section by a matching band on the ROI's top edge — no hard line. The first
+   manifesto (#section-manifesto-intro, before the wheel) keeps #420c24. */
+html:not(.light) #section-manifesto {
+  --mf-below: #1a040d;
+}
+html:not(.light) #roi-calculator::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: min(420px, 45vh);
+  background: linear-gradient(180deg,
+    #1a040d 0%,
+    color-mix(in srgb, #1a040d 72%, transparent) 25%,
+    color-mix(in srgb, #1a040d 38%, transparent) 55%,
+    color-mix(in srgb, #1a040d 12%, transparent) 80%,
+    transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+html:not(.light) #roi-calculator > .page-container {
+  position: relative;
+  z-index: 1;
+}

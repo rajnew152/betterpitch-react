@@ -25,12 +25,16 @@
     if (!lines.length) { if (++tries < 300) requestAnimationFrame(init); return; }
 
     const fills = lines.map((line) => {
+      /* clip window (css/marquee-fill.css) around the gradient copy */
+      const clip = document.createElement("span");
+      clip.className = "lia-marquee-fill-clip";
+      clip.setAttribute("aria-hidden", "true");
       const f = document.createElement("span");
       f.className = "lia-marquee-fill";
-      f.setAttribute("aria-hidden", "true");
       f.textContent = line.textContent;
-      line.appendChild(f);
-      return { line, f, last: "" };
+      clip.appendChild(f);
+      line.appendChild(clip);
+      return { line, clip, f, last: "" };
     });
 
     const hero = document.getElementById("hero");
@@ -71,7 +75,11 @@
           const edge = sweep >= 1 ? r.width + soft : Math.max(0, sweep * (vw + soft) - r.left);
           key = `${edge.toFixed(1)}|${strength.toFixed(3)}`;
           if (key !== o.last) {
-            o.f.style.setProperty("--mf-edge", `${edge.toFixed(1)}px`);
+            /* the window's soft right edge sits at `edge` (same place the old
+               animated mask put it); the fill counter-moves so the text stays put */
+            const shift = edge - (r.width + soft);
+            o.clip.style.transform = `translate3d(${shift.toFixed(1)}px,0,0)`;
+            o.f.style.transform = `translate3d(${(-shift).toFixed(1)}px,0,0)`;
             o.f.style.opacity = strength.toFixed(3);
           }
         }

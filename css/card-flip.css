@@ -95,7 +95,7 @@ html.light #section-toolkit .tk__subtitle { color: #2b1626; }
 }
 #section-toolkit .tk-flip__title { color: var(--flip-ink); }
 #section-toolkit .tk-flip__text { color: rgba(245, 231, 223, 0.86); }
-[data-flip="agni-agent-builder"]  { --flip-a: #2b1626; --flip-b: #7a1f52; --flip-ink: #ff5fa8; }
+[data-flip="agni-agent-builder"]  { --flip-a: #1c0b2e; --flip-b: #5b3cc4; --flip-ink: #ffd9ee; }
 [data-flip="agni-knowledge-base"] { --flip-a: #1a0f2e; --flip-b: #4b2a8c; --flip-ink: #b9a3ff; }
 [data-flip="agni-tools"]          { --flip-a: #330a14; --flip-b: #8a2a1a; --flip-ink: #ff8a6e; }
 [data-flip="agni-calling"]        { --flip-a: #e345c4; --flip-b: #ff9478; --flip-ink: #ffffff; }
