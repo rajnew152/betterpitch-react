@@ -1,0 +1,281 @@
+.light .cps-wheel-glass { opacity: 0.05; }
+.light .cps-wheel-divider { stroke: #6b3d51; stroke-opacity: 1; }
+.light .cps-wheel-hairline { stroke: #bc1863; stroke-opacity: 0.05; }
+
+/* ------------------------------------------------------------------ icon tiles
+   Glass tiles in the voice demo card's style (its frosted white mic button:
+   translucent white over the red gradient, soft white rim and glow) with a
+   white icon, and each industry icon animates on its own loop. */
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.12) 100%);
+  box-shadow: 0 10px 28px rgba(120, 6, 48, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  animation: bp-ind-float 4.2s ease-in-out infinite;
+}
+/* a light sheen sweeps across the tile now and then */
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: linear-gradient(115deg, transparent 42%, rgba(255, 255, 255, 0.45) 50%, transparent 58%);
+  transform: translateX(-70%);
+  animation: bp-ind-sheen 5.5s ease-in-out infinite;
+  pointer-events: none;
+}
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child > svg {
+  position: relative;
+  z-index: 1;
+  color: #ffffff;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.55));
+  overflow: visible;
+}
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child > svg * {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* per-icon motion */
+#section-cinematic-project svg.lucide-activity path {             /* healthcare: heartbeat trace */
+  /* pathLength="100" on the path: the dash is exactly one trace long, so it draws
+     in, then erases from its start (was 64 on a longer path: mostly a stub) */
+  stroke-dasharray: 100;
+  animation: bp-ind-trace 2.4s ease-in-out infinite;
+}
+#section-cinematic-project svg.lucide-sparkles { animation: bp-ind-twinkle 2.6s ease-in-out infinite; }
+#section-cinematic-project svg.lucide-sparkles path:not(:first-child) { animation: bp-ind-blink 1.3s ease-in-out infinite alternate; }
+#section-cinematic-project svg.lucide-globe { animation: bp-ind-spin 14s linear infinite; }
+#section-cinematic-project svg.lucide-plane { animation: bp-ind-fly 3.2s ease-in-out infinite; }
+#section-cinematic-project svg.lucide-ship { transform-origin: 50% 85%; animation: bp-ind-rock 3s ease-in-out infinite; }
+#section-cinematic-project svg.lucide-shopping-bag { transform-origin: 50% 100%; animation: bp-ind-bounce 2.2s ease-in-out infinite; }
+#section-cinematic-project svg.lucide-house { transform-origin: 50% 100%; animation: bp-ind-hop 2.8s ease-in-out infinite; }
+#section-cinematic-project svg.lucide-building2 path:nth-child(1),
+#section-cinematic-project svg.lucide-building2 path:nth-child(2) { animation: bp-ind-blink 1.6s steps(2, jump-none) infinite alternate; }
+#section-cinematic-project svg.lucide-building2 path:nth-child(2) { animation-delay: 0.8s; }
+#section-cinematic-project svg.lucide-graduation-cap { transform-origin: 50% 70%; animation: bp-ind-toss 3.4s ease-in-out infinite; }
+#section-cinematic-project svg.lucide-landmark { animation: bp-ind-pulse 2.6s ease-in-out infinite; }
+
+/* stagger the tiles so they don't bob in unison */
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child:has(.lucide-house),
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child:has(.lucide-globe) { animation-delay: -0.8s; }
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child:has(.lucide-building2),
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child:has(.lucide-plane) { animation-delay: -1.7s; }
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child:has(.lucide-shopping-bag),
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child:has(.lucide-ship) { animation-delay: -2.5s; }
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child:has(.lucide-sparkles),
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child:has(.lucide-landmark) { animation-delay: -3.3s; }
+
+@keyframes bp-ind-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes bp-ind-sheen { 0%, 55% { transform: translateX(-70%); } 85%, 100% { transform: translateX(70%); } }
+/* draw the trace in, hold the whole heartbeat, then fade it before the next beat */
+@keyframes bp-ind-trace {
+  0% { stroke-dashoffset: 100; opacity: 1; }
+  40% { stroke-dashoffset: 0; opacity: 1; }
+  78% { stroke-dashoffset: 0; opacity: 1; }
+  95%, 100% { stroke-dashoffset: 0; opacity: 0; }
+}
+@keyframes bp-ind-twinkle { 0%, 100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.12) rotate(12deg); } }
+@keyframes bp-ind-blink { from { opacity: 1; } to { opacity: 0.25; } }
+@keyframes bp-ind-spin { to { transform: rotate(360deg); } }
+@keyframes bp-ind-fly { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 50% { transform: translate(3px, -4px) rotate(-6deg); } }
+@keyframes bp-ind-rock { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg) translateY(-1px); } }
+@keyframes bp-ind-bounce { 0%, 60%, 100% { transform: translateY(0) scale(1, 1); } 20% { transform: translateY(-5px) scale(0.96, 1.04); } 40% { transform: translateY(0) scale(1.06, 0.94); } }
+@keyframes bp-ind-hop { 0%, 70%, 100% { transform: translateY(0); } 80% { transform: translateY(-4px); } 90% { transform: translateY(0) scale(1.05, 0.95); } }
+@keyframes bp-ind-toss { 0%, 100% { transform: rotate(0deg) translateY(0); } 30% { transform: rotate(-12deg) translateY(-4px); } 60% { transform: rotate(6deg) translateY(0); } }
+@keyframes bp-ind-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+/* ------------------------------------------------ tile extras (legacy/wheel.js)
+   sonar pings behind the icon, an orbiting spark, and a ringing "live call" badge.
+   Individual transform properties (scale / rotate / translate) so they never fight
+   the tile's own float or the icon animations. */
+#section-cinematic-project .bp-ind-ping {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 46%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  translate: -50% -50%;
+  opacity: 0;
+  pointer-events: none;
+  animation: bp-ind-ping 2.8s ease-out infinite;
+  animation-delay: calc(var(--bp-i, 0) * -0.37s);
+}
+#section-cinematic-project .bp-ind-ping--late { animation-delay: calc(var(--bp-i, 0) * -0.37s - 1.4s); }
+#section-cinematic-project .bp-ind-orbit {
+  position: absolute;
+  inset: 13%;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: bp-ind-orbit 6s linear infinite;
+  animation-delay: calc(var(--bp-i, 0) * -0.6s);
+}
+#section-cinematic-project .bp-ind-orbit::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.8), 0 0 16px 5px rgba(255, 150, 200, 0.55);
+}
+#section-cinematic-project .bp-ind-call {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.94);
+  color: #e8173f;
+  box-shadow: 0 2px 8px rgba(120, 6, 48, 0.35);
+  animation: bp-ind-ring 3.6s ease-in-out infinite;
+  animation-delay: calc(var(--bp-i, 0) * -0.45s);
+}
+#section-cinematic-project .bp-ind-call svg { width: 11px; height: 11px; }
+/* a halo pulses out of the badge while it rings */
+#section-cinematic-project .bp-ind-call::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  opacity: 0;
+  z-index: -1;
+  animation: bp-ind-halo 3.6s ease-out infinite;
+  animation-delay: inherit;
+}
+@keyframes bp-ind-ping { 0% { scale: 0.6; opacity: 0.75; } 100% { scale: 2.2; opacity: 0; } }
+@keyframes bp-ind-orbit { to { rotate: 360deg; } }
+@keyframes bp-ind-ring {
+  0%, 58%, 88%, 100% { rotate: 0deg; }
+  62% { rotate: -16deg; } 66% { rotate: 16deg; } 70% { rotate: -13deg; }
+  74% { rotate: 13deg; } 78% { rotate: -7deg; } 82% { rotate: 7deg; }
+}
+@keyframes bp-ind-halo { 0%, 58% { scale: 1; opacity: 0; } 62% { opacity: 0.6; } 90%, 100% { scale: 2.1; opacity: 0; } }
+
+/* legacy/wheel.js: the loops pause while the page scrolls through the wheel and on
+   tiles that are off-screen (each running loop costs a style pass per frame) */
+#section-cinematic-project.bp-ind-scrolling [data-cinematic-wheel-detail] > div:first-child,
+#section-cinematic-project.bp-ind-scrolling [data-cinematic-wheel-detail] > div:first-child *,
+#section-cinematic-project.bp-ind-scrolling [data-cinematic-wheel-detail] > div:first-child::after,
+#section-cinematic-project.bp-ind-scrolling [data-cinematic-wheel-detail] > div:first-child *::before,
+#section-cinematic-project [data-cinematic-wheel-detail] > div.bp-ind-off,
+#section-cinematic-project [data-cinematic-wheel-detail] > div.bp-ind-off *,
+#section-cinematic-project [data-cinematic-wheel-detail] > div.bp-ind-off::after,
+#section-cinematic-project [data-cinematic-wheel-detail] > div.bp-ind-off *::before { animation-play-state: paused !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  #section-cinematic-project .bp-ind-ping,
+  #section-cinematic-project .bp-ind-orbit,
+  #section-cinematic-project .bp-ind-call,
+  #section-cinematic-project .bp-ind-call::before { animation: none !important; }
+  #section-cinematic-project .bp-ind-ping { opacity: 0; }
+  #section-cinematic-project [data-cinematic-wheel-detail] > div:first-child,
+  #section-cinematic-project [data-cinematic-wheel-detail] > div:first-child::after,
+  #section-cinematic-project [data-cinematic-wheel-detail] > div:first-child > svg,
+  #section-cinematic-project [data-cinematic-wheel-detail] > div:first-child > svg * { animation: none !important; }
+}
+
+/* ------------------------------------------------------------------ label type
+   Larger titles and descriptions on the segments (was 0.95–1.25rem titles,
+   0.72–0.92rem copy), with the label box widened to match so the lines still
+   wrap into a tidy block inside each segment. */
+#section-cinematic-project div:has(> [data-cinematic-wheel-detail]) { width: 205px; }
+#section-cinematic-project [data-cinematic-wheel-detail] h3 { font-size: 1.08rem; }
+#section-cinematic-project [data-cinematic-wheel-detail] p { font-size: 0.82rem; line-height: 1.45; }
+@media (min-width: 640px) {
+  #section-cinematic-project div:has(> [data-cinematic-wheel-detail]) { width: 238px; }
+  #section-cinematic-project [data-cinematic-wheel-detail] h3 { font-size: 1.22rem; }
+  #section-cinematic-project [data-cinematic-wheel-detail] p { font-size: 0.92rem; }
+}
+@media (min-width: 1024px) {
+  #section-cinematic-project div:has(> [data-cinematic-wheel-detail]) { width: 255px; }
+  #section-cinematic-project [data-cinematic-wheel-detail] h3 { font-size: 1.32rem; }
+  #section-cinematic-project [data-cinematic-wheel-detail] p { font-size: 1rem; }
+}
+@media (min-width: 1536px) {
+  #section-cinematic-project div:has(> [data-cinematic-wheel-detail]) { width: 290px; }
+  #section-cinematic-project [data-cinematic-wheel-detail] h3 { font-size: 1.5rem; }
+  #section-cinematic-project [data-cinematic-wheel-detail] p { font-size: 1.1rem; }
+}
+
+/* ------------------------------------------------------------------ icon colour
+   Each industry icon gets its own colour from the brand range, on a bright
+   frosted-white tile (so the colour reads on the red segments) with a soft glow
+   in the icon's colour. The phone badge and the orbiting dot take the card
+   gradient so they still stand out on the whiter tile. */
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child {
+  --ind-c: #e8173f;
+  border-color: rgba(255, 255, 255, 0.75);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 240, 244, 0.86) 100%);
+  box-shadow: 0 10px 28px rgba(120, 6, 48, 0.3), inset 0 1px 0 #ffffff;
+}
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child:has(.lucide-house)         { --ind-c: #ff5a2c; }  /* real estate: orange */
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child:has(.lucide-building2)     { --ind-c: #e8173f; }  /* hospitality: crimson */
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child:has(.lucide-shopping-bag)  { --ind-c: #cf159f; }  /* D2C: magenta */
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child:has(.lucide-activity)      { --ind-c: #f4301f; }  /* healthcare: red */
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child:has(.lucide-graduation-cap){ --ind-c: #7c3aed; }  /* edtech: violet */
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child:has(.lucide-landmark)      { --ind-c: #c2185b; }  /* BFSI: deep rose */
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child:has(.lucide-plane)         { --ind-c: #ff6a3d; }  /* travel: coral */
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child:has(.lucide-ship)          { --ind-c: #d6197a; }  /* logistics: pink */
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child:has(.lucide-globe)         { --ind-c: #9b2cf0; }  /* contact centres: purple */
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child:has(.lucide-sparkles)      { --ind-c: #f73679; }  /* your industry: hot pink */
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child > svg {
+  color: var(--ind-c);
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--ind-c) 45%, transparent));
+}
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child::after {
+  background: linear-gradient(115deg, transparent 42%, rgba(255, 255, 255, 0.7) 50%, transparent 58%);
+}
+#section-cinematic-project .bp-ind-orbit::before {
+  background: var(--ind-c, #e8173f);
+  box-shadow: 0 0 8px 2px color-mix(in srgb, var(--ind-c, #e8173f) 60%, transparent);
+}
+#section-cinematic-project .bp-ind-call {
+  background: linear-gradient(145deg, #ff5a2c 0%, #f4301f 45%, #cf159f 100%);
+  color: #ffffff;
+}
+
+/* ------------------------------------------------------------------ tile colour
+   Each tile takes its industry colour (--ind-c above) as its background — a soft
+   gradient from a lighter tint to a deeper shade — with a white icon on top. The
+   phone badge turns white with the phone in the tile colour, and the orbiting
+   dot white, so both still read on the coloured tile. */
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child {
+  border-color: rgba(255, 255, 255, 0.55);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--ind-c) 72%, #ffffff) 0%,
+    var(--ind-c) 52%,
+    color-mix(in srgb, var(--ind-c) 78%, #000000) 100%
+  );
+  box-shadow:
+    0 10px 28px color-mix(in srgb, var(--ind-c) 45%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child > svg {
+  color: #ffffff;
+  filter: drop-shadow(0 1px 6px rgba(0, 0, 0, 0.18));
+}
+#section-cinematic-project [data-cinematic-wheel-detail] > div:first-child::after {
+  background: linear-gradient(115deg, transparent 42%, rgba(255, 255, 255, 0.35) 50%, transparent 58%);
+}
+#section-cinematic-project .bp-ind-orbit::before {
+  background: #ffffff;
+  box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.75);
+}
+#section-cinematic-project .bp-ind-call {
+  background: #ffffff;
+  color: var(--ind-c, #e8173f);
+}

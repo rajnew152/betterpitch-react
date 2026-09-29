@@ -1,0 +1,56 @@
+/* =============================================================================
+   marquee-fill.css — red → magenta gradient fill over the outlined
+   "OUR FEATURES / POWERED BY AI" marquee. The fill is a copy of each line laid
+   on top of it; js/marquee-fill.js sweeps it in as the section is revealed and
+   fades it back to the outline as the first feature card arrives.
+   ============================================================================= */
+.lia-marquee-line { position: relative; }
+/* the sweep is a clipping window that slides across the line (a composited
+   transform) with a static soft right edge; the fill inside slides back by the
+   same amount so the text stays put. Nothing is repainted while it sweeps —
+   animating the mask itself repainted the whole giant gradient line each frame. */
+.lia-marquee-fill-clip {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: calc(100% + 18vw);
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 18vw), transparent 100%);
+  mask-image: linear-gradient(90deg, #000 calc(100% - 18vw), transparent 100%);
+  will-change: transform;
+}
+.lia-marquee-fill-clip > .lia-marquee-fill {
+  inset: 0 auto 0 0;
+  width: calc(100% - 18vw);
+  -webkit-mask-image: none;
+  mask-image: none;
+  will-change: transform, opacity;
+}
+.lia-marquee-fill {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  color: transparent;
+  -webkit-text-stroke: 0 !important;
+  background-image: linear-gradient(90deg, #b51cb4 0%, #d11d86 22%, #de1e4b 40%, #e2141b 50%, #de1e4b 60%, #d11d86 78%, #b51cb4 100%);
+  background-size: 140vw 100%;
+  background-repeat: repeat-x;
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: 0;
+  /* soft sweep edge: --mf-edge is set in the line's own pixels by the script */
+  --mf-edge: 0px;
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(var(--mf-edge) - 18vw), transparent var(--mf-edge));
+  mask-image: linear-gradient(90deg, #000 calc(var(--mf-edge) - 18vw), transparent var(--mf-edge));
+  will-change: opacity;
+}
+
+/* start both marquee lines a small inset from the left edge instead of centring
+   them (centred, the first letters were clipped). js/features.js pulls the
+   right-moving second line back by one segment so it can't open a gap. */
+.lia-marquee-line {
+  align-self: flex-start;
+  margin-left: calc(clamp(16px, 2vw, 40px) - var(--marquee-lead, 0px));
+}

@@ -1,0 +1,202 @@
+/* =============================================================================
+   card-demo.css — service cards in the hero carousel:
+   1. the red / orange / magenta card gradient
+   2. the "Try it with your business" demo layer (form → live voice chat),
+      built by js/card-demo.js. Sizes follow the card width (container units),
+      so the same layer fits the 460px desktop cards and the ~330px mobile ones.
+   ============================================================================= */
+
+/* ---------------------------------------------------------------- gradient */
+/* React sets inline styles through the CSSOM, which re-serializes them
+   ("rgba(...) 0px 30px 80px -20px"), so the serialized form is matched too */
+.lia-feature-card [style*="0 30px 80px -20px"],
+.lia-feature-card [style*="0px 30px 80px -20px"] {
+  background:
+    radial-gradient(70% 50% at 88% 4%, rgba(255, 150, 200, 0.55) 0%, transparent 60%),
+    radial-gradient(80% 62% at 0% 100%, rgba(214, 22, 214, 0.9) 0%, transparent 62%),
+    radial-gradient(60% 50% at 100% 100%, rgba(236, 26, 44, 0.75) 0%, transparent 60%),
+    radial-gradient(55% 45% at 10% 8%, rgba(255, 110, 40, 0.7) 0%, transparent 60%),
+    linear-gradient(158deg, #ff5a2c 0%, #f4301f 36%, #e8173f 66%, #cf159f 100%) !important;
+  box-shadow: 0 30px 80px -20px rgba(232, 40, 90, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06) !important;
+}
+
+/* -------------------------------------------------------------- demo layer */
+.bp-demo {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  border-radius: 28px;
+  pointer-events: none;
+  container-type: inline-size;
+  font-family: var(--font-poppins, "Geist", Arial, sans-serif);
+  color: #fff;
+}
+
+/* launcher pill */
+.bp-demo__open {
+  position: absolute;
+  left: 50%;
+  bottom: 5.5cqw;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.7em 1.15em;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #b0103a;
+  font: inherit;
+  font-size: clamp(11px, 3.1cqw, 14px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 10px 30px -8px rgba(90, 0, 40, 0.55);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.bp-demo__open:hover { transform: translateX(-50%) translateY(-2px); box-shadow: 0 14px 34px -8px rgba(90, 0, 40, 0.65); background: #fff; }
+.bp-demo__open:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+.bp-demo__open svg { width: 1.15em; height: 1.15em; flex: none; }
+.bp-demo.is-open .bp-demo__open { opacity: 0; pointer-events: none; }
+
+/* panel covering the card */
+.bp-demo__panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 6cqw;
+  border-radius: 28px;
+  background: linear-gradient(170deg, rgba(60, 4, 22, 0.78) 0%, rgba(40, 2, 36, 0.86) 100%);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  opacity: 0;
+  transform: translateY(12px) scale(0.98);
+  transition: opacity 0.28s ease, transform 0.28s ease;
+  pointer-events: none;
+  font-size: clamp(11px, 3.2cqw, 14px);
+}
+.bp-demo.is-open .bp-demo__panel { opacity: 1; transform: none; pointer-events: auto; }
+
+.bp-demo__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75em; }
+.bp-demo__kicker { font-size: 0.78em; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6); }
+.bp-demo__title { margin-top: 0.3em; font-size: 1.45em; font-weight: 600; line-height: 1.15; letter-spacing: -0.02em; }
+.bp-demo__close {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.2em;
+  height: 2.2em;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 1em;
+  cursor: pointer;
+}
+.bp-demo__close:hover { background: rgba(255, 255, 255, 0.18); }
+
+/* setup form */
+.bp-demo__form { display: flex; flex-direction: column; gap: 0.85em; margin-top: 1.3em; flex: 1; min-height: 0; }
+.bp-demo__label { display: flex; flex-direction: column; gap: 0.4em; font-size: 0.85em; color: rgba(255, 255, 255, 0.72); }
+.bp-demo__input,
+.bp-demo__text {
+  width: 100%;
+  padding: 0.75em 0.9em;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.9em;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font: inherit;
+  font-size: 1.1em;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.bp-demo__input::placeholder,
+.bp-demo__text::placeholder { color: rgba(255, 255, 255, 0.4); }
+.bp-demo__input:focus,
+.bp-demo__text:focus { border-color: rgba(255, 255, 255, 0.6); background: rgba(255, 255, 255, 0.13); }
+textarea.bp-demo__input { resize: none; min-height: 4.6em; line-height: 1.4; }
+.bp-demo__error { min-height: 1.2em; font-size: 0.85em; color: #ffd1dc; }
+
+.bp-demo__primary {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55em;
+  padding: 0.9em 1em;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #b0103a;
+  font: inherit;
+  font-size: 1.05em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 10px 28px -10px rgba(0, 0, 0, 0.6);
+}
+.bp-demo__primary:hover { transform: translateY(-1px); }
+.bp-demo__primary svg { width: 1.2em; height: 1.2em; }
+
+/* live chat */
+.bp-demo__chat { display: none; flex-direction: column; flex: 1; min-height: 0; margin-top: 0.9em; }
+.bp-demo.is-chatting .bp-demo__form { display: none; }
+.bp-demo.is-chatting .bp-demo__chat { display: flex; }
+.bp-demo__status { display: flex; align-items: center; gap: 0.5em; font-size: 0.82em; color: rgba(255, 255, 255, 0.7); }
+.bp-demo__dot { width: 0.55em; height: 0.55em; border-radius: 50%; background: rgba(255, 255, 255, 0.45); }
+.bp-demo[data-state="listening"] .bp-demo__dot { background: #4ade80; box-shadow: 0 0 0 0.3em rgba(74, 222, 128, 0.25); animation: bp-demo-pulse 1.2s ease-in-out infinite; }
+.bp-demo[data-state="speaking"] .bp-demo__dot { background: #ffd166; animation: bp-demo-pulse 0.9s ease-in-out infinite; }
+.bp-demo[data-state="thinking"] .bp-demo__dot { background: #fff; animation: bp-demo-pulse 0.6s ease-in-out infinite; }
+@keyframes bp-demo-pulse { 50% { opacity: 0.4; } }
+
+.bp-demo__log {
+  flex: 1;
+  min-height: 0;
+  margin: 0.8em 0;
+  padding-right: 0.3em;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55em;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+.bp-demo__msg { max-width: 86%; padding: 0.6em 0.85em; border-radius: 1em; line-height: 1.4; font-size: 0.98em; animation: bp-demo-in 0.25s ease; }
+.bp-demo__msg--agent { align-self: flex-start; border-top-left-radius: 0.3em; background: rgba(255, 255, 255, 0.14); border: 1px solid rgba(255, 255, 255, 0.14); }
+.bp-demo__msg--user { align-self: flex-end; border-top-right-radius: 0.3em; background: #fff; color: #7a0a2a; }
+.bp-demo__msg--interim { opacity: 0.6; font-style: italic; }
+.bp-demo__msg--note { align-self: center; max-width: 100%; padding: 0.2em 0.5em; font-size: 0.8em; color: rgba(255, 255, 255, 0.6); background: none; }
+@keyframes bp-demo-in { from { opacity: 0; transform: translateY(6px); } }
+
+.bp-demo__bar { display: flex; align-items: center; gap: 0.5em; }
+.bp-demo__text { flex: 1; min-width: 0; padding: 0.65em 0.9em; border-radius: 999px; font-size: 1em; }
+.bp-demo__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.7em;
+  height: 2.7em;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.bp-demo__icon:hover { background: rgba(255, 255, 255, 0.2); }
+.bp-demo__icon svg { width: 1.2em; height: 1.2em; }
+.bp-demo__mic { width: 3.2em; height: 3.2em; background: #fff; color: #c0123f; border-color: #fff; }
+.bp-demo__mic:hover { background: #fff; transform: scale(1.05); }
+.bp-demo[data-state="listening"] .bp-demo__mic { background: #16a34a; color: #fff; border-color: #16a34a; box-shadow: 0 0 0 0.35em rgba(22, 163, 74, 0.3); }
+.bp-demo__mic[disabled] { opacity: 0.45; cursor: not-allowed; }
+.bp-demo__end { margin-top: 0.7em; align-self: center; padding: 0.35em 0.9em; border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 999px; background: none; color: rgba(255, 255, 255, 0.8); font: inherit; font-size: 0.82em; cursor: pointer; }
+.bp-demo__end:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+  .bp-demo__panel, .bp-demo__open, .bp-demo__msg { transition: none; animation: none; }
+}

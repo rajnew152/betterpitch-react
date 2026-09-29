@@ -1,0 +1,610 @@
+/* =============================================================================
+   team.css — "Meet the team": a title over the pinned "outcomes." gradient and a
+   kora-style panel under it (kora.framer.media): the three members listed on
+   the left (each row opens a profile dialog) and a rounded "we're hiring" card
+   on the right (markup: tools/team-section.html, logic: js/team.js). The
+   orange / purple journey stage stays untouched behind it.
+   ============================================================================= */
+.traj__team {
+  position: relative;
+  z-index: 5;
+  --team-cream: #fdf7f0;
+  --team-ink: #241827;
+  /* everything scales with the viewport (no px caps), so the panel fills the
+     stage under the title on any screen size or zoom level */
+  --team-heading-top: 6vh;
+  --team-title-size: min(8vw, 12vh);
+  --team-panel-top: calc(var(--team-heading-top) + var(--team-title-size) * 1.12 + 3.5vh);
+  --team-panel-h: calc(100vh - var(--team-panel-top) - 5vh);
+}
+
+/* the title: a full-viewport layer that takes no room in the flow (js/team.js
+   pins it for the whole block and fades it in with the panel) */
+.team-heading {
+  position: relative;
+  z-index: 10;
+  height: 100vh;
+  margin-bottom: -100vh;
+  pointer-events: none;
+}
+.team-heading__title {
+  position: absolute;
+  top: var(--team-heading-top);
+  left: 0;
+  width: 100%;
+  margin: 0;
+  font-family: var(--gz-font);
+  font-size: var(--team-title-size);
+  font-weight: 700;          /* same type as the "outcomes." sentence (.traj__sentence) */
+  line-height: 0.9;
+  letter-spacing: -0.025em;
+  text-align: center;
+  color: var(--gz-cream);
+  text-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+  will-change: transform, opacity;
+}
+
+/* ScrollTrigger wraps each pinned element in a .pin-spacer that copies its
+   z-index, position, size and margins but not its pointer-events. The title's
+   spacer (z-index 10, 100vh tall, pulled back by the -100vh margin) therefore sat
+   invisibly over the whole panel and swallowed every click on the rows and the
+   hiring button. Spacers here pass clicks through; the panel takes them back. */
+.traj__team .pin-spacer { pointer-events: none; }
+
+/* ── the panel: one viewport, list left / hiring card right ── */
+.team-panel {
+  pointer-events: auto;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  height: 100vh;
+  padding: var(--team-panel-top) 4vw 0;
+  font-family: var(--gz-font);
+}
+.team-panel__inner {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: clamp(24px, 4vw, 64px);
+  width: min(100%, 1180px);
+  height: var(--team-panel-h);
+  will-change: transform;
+}
+
+/* member list, kora-style rows */
+.team-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+.team-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: clamp(14px, 1.8vw, 26px);
+  padding: clamp(14px, 2.8vh, 28px) clamp(6px, 0.8vw, 14px);
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 0;
+  background: none;
+  color: var(--team-cream);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+.team-row:first-child { border-top: 1px solid rgba(255, 255, 255, 0.4); }
+.team-row:hover,
+.team-row:focus-visible { background: rgba(255, 255, 255, 0.08); }
+.team-row__ava {
+  width: clamp(52px, 8.5vh, 76px);
+  height: clamp(52px, 8.5vh, 76px);
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 50%;
+}
+.team-row__ava img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+}
+.team-row__meta { min-width: 0; }
+.team-row__meta strong {
+  display: block;
+  font-size: clamp(17px, 2.9vh, 25px);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.team-row__meta em {
+  display: block;
+  margin-top: 4px;
+  font-style: normal;
+  font-size: clamp(12px, 1.8vh, 15px);
+  opacity: 0.8;
+}
+.team-row__num {
+  font-size: clamp(11px, 1.6vh, 13px);
+  letter-spacing: 0.1em;
+  opacity: 0.75;
+}
+.team-row__plus {
+  display: grid;
+  place-items: center;
+  width: clamp(32px, 4.6vh, 40px);
+  height: clamp(32px, 4.6vh, 40px);
+  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  border-radius: 50%;
+  font-size: clamp(16px, 2.4vh, 20px);
+  font-weight: 300;
+  line-height: 1;
+  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+.team-row:hover .team-row__plus,
+.team-row:focus-visible .team-row__plus {
+  transform: rotate(90deg);
+  background: var(--team-cream);
+  color: #6d1b4b;
+}
+
+/* the hiring card on the right: styled like the hero's assistant cards
+   (AppointmentsCard) — pink gradient, glass chat bubble, composer, apply pill */
+.team-hire {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 3.5vh, 36px);
+  min-height: 0;
+  padding: clamp(52px, 8vh, 72px) clamp(18px, 6%, 32px) clamp(18px, 3.4vh, 30px);
+  overflow: hidden;
+  border-radius: clamp(18px, 3vh, 28px);
+  color: #fff;
+  background:
+    radial-gradient(120% 90% at 92% -8%, rgba(255, 110, 119, 0.58) 0%, transparent 52%),
+    radial-gradient(90% 70% at 8% 4%, rgba(255, 90, 147, 0.45) 0%, transparent 58%),
+    radial-gradient(80% 65% at 50% 105%, rgba(200, 30, 102, 0.42) 0%, transparent 65%),
+    linear-gradient(180deg, #e8186d 0%, #c81062 55%, #880849 100%);
+  box-shadow: 0 30px 80px -20px rgba(200, 20, 86, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+.team-hire::before {         /* soft highlight, as on the service cards */
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(55% 45% at 78% 22%, rgba(255, 255, 255, 0.3) 0%, transparent 60%),
+    radial-gradient(70% 50% at 25% 95%, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  mix-blend-mode: screen;
+}
+.team-hire > * { position: relative; z-index: 1; }
+
+.team-hire__badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(14, 10, 13, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.5);
+}
+.team-hire__pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3ddc84;
+  box-shadow: 0 0 0 0 rgba(61, 220, 132, 0.6);
+  animation: team-hire-pulse 1.8s infinite;
+}
+@keyframes team-hire-pulse {
+  70% { box-shadow: 0 0 0 7px rgba(61, 220, 132, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(61, 220, 132, 0); }
+}
+
+.team-hire__chat {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+.team-hire__msg {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  max-width: 88%;
+}
+.team-hire__orb {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff 0%, #ffc9f6 35%, #ff6be8 75%, #ff22d0 100%);
+  box-shadow: 0 0 14px rgba(255, 160, 249, 0.7), inset 0 -4px 8px rgba(30, 0, 19, 0.3);
+}
+.team-hire__bubble,
+.team-hire__typing {
+  border-radius: 16px 16px 16px 6px;
+  background: rgba(28, 12, 26, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: 0 8px 24px rgba(40, 0, 33, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.team-hire__bubble {
+  padding: 12px 14px;
+  font-size: clamp(12.5px, 1.8vh, 14px);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.92);
+}
+.team-hire__from {
+  margin-bottom: 4px;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.55);
+}
+.team-hire__typing {
+  align-self: flex-start;
+  display: inline-flex;
+  gap: 6px;
+  margin-left: 38px;
+  padding: 11px 14px;
+}
+.team-hire__typing span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  animation: team-hire-blink 1.2s infinite ease-in-out;
+}
+.team-hire__typing span:nth-child(2) { animation-delay: 0.15s; }
+.team-hire__typing span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes team-hire-blink {
+  0%, 80%, 100% { opacity: 0.3; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-2px); }
+}
+
+.team-hire__composer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 6px;
+  padding: 14px;
+  border-radius: 22px;
+  background: rgba(24, 10, 23, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  box-shadow: 0 30px 60px -20px rgba(40, 0, 30, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.team-hire__chips {
+  display: flex;
+  gap: 8px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, #000 85%, transparent);
+  mask-image: linear-gradient(to right, #000 85%, transparent);
+}
+.team-hire__chip {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.88);
+  background: rgba(50, 28, 48, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+.team-hire__chip:hover { transform: translateY(-1px); background: rgba(70, 38, 66, 0.7); }
+.team-hire__chip svg { width: 14px; height: 14px; opacity: 0.85; }
+.team-hire__input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 6px 6px 10px;
+  font-size: 13.5px;
+}
+.team-hire__plus { font-size: 20px; line-height: 1; color: rgba(255, 255, 255, 0.75); }
+.team-hire__placeholder { flex: 1; color: rgba(255, 255, 255, 0.5); }
+.team-hire__wave {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.25);
+}
+.team-hire__wave span {
+  width: 2px;
+  border-radius: 2px;
+  background: #180a17;
+  animation: team-hire-bar 1s infinite ease-in-out;
+}
+.team-hire__wave span:nth-child(1) { height: 6px; }
+.team-hire__wave span:nth-child(2) { height: 10px; animation-delay: 0.1s; }
+.team-hire__wave span:nth-child(3) { height: 14px; animation-delay: 0.2s; }
+.team-hire__wave span:nth-child(4) { height: 10px; animation-delay: 0.3s; }
+.team-hire__wave span:nth-child(5) { height: 6px; animation-delay: 0.4s; }
+@keyframes team-hire-bar {
+  0%, 100% { transform: scaleY(0.5); }
+  50% { transform: scaleY(1); }
+}
+
+.team-hire__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #c81062;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 10px 30px -10px rgba(40, 0, 30, 0.5);
+  transition: transform 0.25s ease;
+}
+.team-hire__btn:hover { transform: translateY(-2px); }
+.team-hire__btn svg { width: 16px; height: 16px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .team-hire__pulse, .team-hire__typing span, .team-hire__wave span { animation: none; }
+}
+
+/* ── member profile dialog (js/team.js moves it to <body> and toggles it) ──
+   kora-style entrance: the card grows out of the clicked "+" (js/team.js sets
+   --tm-from-x / --tm-from-y to the button's offset from the viewport centre) with a
+   slight spring, the backdrop fades and blurs in, then the photo wipes open and the
+   copy rises in a stagger. Closing runs the card back into the button, faster and
+   without the stagger (the delays live only on the .is-open rules). */
+.team-modal {
+  /* it lives on <body>, outside .traj__team, so it needs its own copy of the tokens */
+  --team-cream: #fdf7f0;
+  --team-ink: #241827;
+  --tm-spring: cubic-bezier(0.2, 1.18, 0.32, 1);
+  --tm-out: cubic-bezier(0.55, 0, 0.75, 0.2);
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: var(--gz-font);
+  visibility: hidden;
+  pointer-events: none;
+  transition: visibility 0s linear 0.42s;
+}
+.team-modal.is-open {
+  visibility: visible;
+  pointer-events: auto;
+  transition-delay: 0s;
+}
+.team-modal__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(24, 8, 22, 0.45);
+  opacity: 0;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition: opacity 0.38s ease, backdrop-filter 0.38s ease, -webkit-backdrop-filter 0.38s ease;
+}
+.team-modal.is-open .team-modal__scrim {
+  opacity: 1;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition-duration: 0.5s;
+}
+.team-modal__card {
+  position: relative;
+  width: min(1000px, 96vw);
+  max-height: 90vh;
+  overflow: auto;
+  padding: 12px;
+  border-radius: 34px;
+  background: #f3ece1;
+  color: var(--team-ink);
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transform: translate(var(--tm-from-x, 0px), var(--tm-from-y, 40px)) scale(0.12);
+  transition: transform 0.4s var(--tm-out), opacity 0.22s ease 0.16s;
+  will-change: transform, opacity;
+}
+.team-modal.is-open .team-modal__card {
+  opacity: 1;
+  transform: none;
+  transition: transform 0.75s var(--tm-spring), opacity 0.2s ease;
+}
+.team-modal__close {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(36, 24, 39, 0.06);
+  color: var(--team-ink);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.6);
+  transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.25s ease;
+}
+.team-modal.is-open .team-modal__close {
+  opacity: 1;
+  transform: none;
+  transition: background-color 0.2s ease, opacity 0.3s ease 0.45s, transform 0.5s var(--tm-spring) 0.45s;
+}
+.team-modal__close:hover { background: rgba(36, 24, 39, 0.14); }
+.team-modal.is-open .team-modal__close:hover { transform: rotate(90deg); transition-delay: 0s; }
+.team-modal__member {
+  display: none;
+  grid-template-columns: 0.72fr 1.28fr;
+  gap: 12px;
+}
+.team-modal__member.is-active { display: grid; }
+.team-modal__photo {
+  min-height: 380px;
+  overflow: hidden;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #a9bff0 0%, #d7e2f8 100%);
+  clip-path: inset(0 0 100% 0 round 24px);
+  transition: clip-path 0.3s ease;
+}
+.team-modal.is-open .team-modal__photo {
+  clip-path: inset(0 0 0 0 round 24px);
+  transition: clip-path 0.8s cubic-bezier(0.65, 0, 0.2, 1) 0.18s;
+}
+.team-modal__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+  transform: scale(1.18);
+  transition: transform 0.3s ease;
+}
+.team-modal.is-open .team-modal__photo img {
+  transform: none;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.18s;
+}
+.team-modal__body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: clamp(22px, 3.4vw, 40px);
+  border-radius: 24px;
+  background: #fffdf8;
+}
+/* copy rises in one line after another */
+.team-modal__kicker,
+.team-modal__name,
+.team-modal__bio,
+.team-modal__foot {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.team-modal.is-open .team-modal__kicker,
+.team-modal.is-open .team-modal__name,
+.team-modal.is-open .team-modal__bio,
+.team-modal.is-open .team-modal__foot {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.55s ease, transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.team-modal.is-open .team-modal__kicker { transition-delay: 0.28s; }
+.team-modal.is-open .team-modal__name   { transition-delay: 0.34s; }
+.team-modal.is-open .team-modal__bio    { transition-delay: 0.42s; }
+.team-modal.is-open .team-modal__foot   { transition-delay: 0.5s; }
+/* the row's "+" turns into an "×" while its profile is open */
+.team-row.is-opener .team-row__plus {
+  transform: rotate(45deg);
+  background: var(--team-cream);
+  color: #6d1b4b;
+}
+@media (prefers-reduced-motion: reduce) {
+  .team-modal *,
+  .team-modal.is-open * { transition-duration: 0.01s !important; transition-delay: 0s !important; }
+  .team-modal__card { transform: none; }
+}
+.team-modal__kicker {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: rgba(36, 24, 39, 0.55);
+}
+.team-modal__name {
+  margin: 0 0 14px;
+  font-size: clamp(26px, 4vw, 34px);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+}
+.team-modal__bio {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.65;
+  color: rgba(36, 24, 39, 0.72);
+}
+.team-modal__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 20px;
+  margin-top: auto;
+  padding-top: 24px;
+}
+.team-modal__socials {
+  display: flex;
+  gap: 10px;
+}
+.team-modal__socials a {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #f1ebe1;
+  color: var(--team-ink);
+  transition: background-color 0.2s ease, transform 0.25s ease;
+}
+.team-modal__socials a:hover { background: #e6ddcf; transform: translateY(-2px); }
+.team-modal__socials svg { width: 18px; height: 18px; }
+.team-modal__email span {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 12px;
+  color: rgba(36, 24, 39, 0.5);
+}
+.team-modal__email a {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--team-ink);
+  text-decoration: none;
+}
+.team-modal__email a:hover { text-decoration: underline; }
+
+@media (max-width: 900px) {
+  .traj__team { --team-heading-top: 9vh; --team-title-size: min(12vw, 9vh); }
+  .team-panel__inner {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 18px;
+  }
+  .team-row { padding: 12px 6px; }
+  .team-row__ava { width: 48px; height: 48px; }
+  .team-hire { min-height: 30vh; }
+  .team-modal__member { grid-template-columns: 1fr; }
+  .team-modal__card { padding: 10px; border-radius: 28px; }
+  .team-modal__photo { min-height: 0; aspect-ratio: 4 / 3; }
+  .team-modal__body { padding: 22px 18px 20px; }
+  .team-modal__close { top: 20px; right: 20px; background: rgba(253, 250, 246, 0.85); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .team-heading { height: auto; margin-bottom: 0; padding: 12vh 0 0; }
+  .team-heading__title { position: static; }
+}

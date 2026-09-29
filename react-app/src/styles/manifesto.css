@@ -1,0 +1,256 @@
+/* =============================================================================
+   manifesto.css — the "I create experiences at the intersection of design and
+   code." horizontal letter scroll, replicated from the manifesto section of
+   https://guillaumezhu.com/. Background follows the site theme with the Better
+   Pitch warm gradient (orange → pink → magenta glows), Geist for type. Scroll
+   logic lives in js/manifesto.js.
+   ============================================================================= */
+
+/* ------------------------------------------------------------------ palette
+   --mf-above / --mf-below are sampled from the neighbouring section edges
+   (feature carousel above, industries wheel below) so the stage starts and
+   ends on exactly their colours. --mf-ink is the colour the letters enter with. */
+.mf {
+  --mf-above: #000000;
+  --mf-mid: #0b0207;
+  --mf-below: #420c24;
+  --mf-ink: #f5e7df;
+  /* letter ramp: the same brand gradient as "Emotion / meets" (journey-toolkit.css) */
+  --mf-c1: #ff6a3d;
+  --mf-c2: #f73679;
+  --mf-c3: #e232db;
+  --mf-c4: #8b5cf6;
+  --mf-glow-a: rgba(255, 122, 69, 0.20);   /* orange */
+  --mf-glow-b: rgba(247, 54, 121, 0.26);   /* pink */
+  --mf-glow-c: rgba(226, 50, 219, 0.20);   /* magenta */
+}
+html.light .mf {
+  --mf-above: #fdf9fb;
+  --mf-mid: #fbf3f6;
+  --mf-below: #f4e9ee;
+  --mf-ink: #1f1d1d;
+  --mf-c1: #e8502f;
+  --mf-c2: #d81b60;
+  --mf-c3: #b5179e;
+  --mf-c4: #6d28d9;
+  --mf-glow-a: rgba(255, 122, 69, 0.12);
+  --mf-glow-b: rgba(247, 54, 121, 0.13);
+  --mf-glow-c: rgba(226, 50, 219, 0.10);
+}
+
+.mf {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--mf-above) 0%, var(--mf-mid) 50%, var(--mf-below) 100%);
+  font-family: "Geist", "Geist Fallback", Arial, Helvetica, sans-serif;
+}
+/* height is set by js/manifesto.js to 100vh + the horizontal travel */
+.mf__pin-height { height: 100vh; }
+.mf__container {
+  --mf-glow: 0;      /* 0..1, scrubbed by js/manifesto.js */
+  --mf-drift: 0;     /* 0..1, slide progress, moves the glows */
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  /* the pinned stage blends from the colour above to the colour below as the
+     sentence travels (js/manifesto.js sets --mf-stage) */
+  background: var(--mf-stage, var(--mf-above));
+}
+/* brand glows: fade in as the stage pins, drift with the sentence, fade out
+   before it releases, so both hand-offs are plain theme colour */
+.mf__container::before {
+  content: "";
+  position: absolute;
+  inset: -20% -30%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--mf-glow);
+  transform: translateX(calc(var(--mf-drift) * -12%));
+  background:
+    radial-gradient(ellipse 38% 42% at 22% 38%, var(--mf-glow-a), transparent 70%),
+    radial-gradient(ellipse 42% 46% at 50% 58%, var(--mf-glow-b), transparent 72%),
+    radial-gradient(ellipse 38% 42% at 80% 36%, var(--mf-glow-c), transparent 70%);
+  filter: blur(20px);
+  will-change: opacity, transform;
+}
+.mf__text {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: max-content;
+  margin: 0;
+  padding: 0 101vw;
+  white-space: nowrap;
+  color: var(--mf-ink);
+  /* same type as the journey sentences ("Emotion / meets") */
+  font-size: 10vw;
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.025em;
+  cursor: default;
+  will-change: transform;
+}
+.mf__text .letter { display: inline-block; }
+
+@media (max-width: 768px) {
+  .mf__text { font-size: clamp(42px, 12vw, 60px); }
+}
+
+/* no scroll animation: the sentence simply wraps, centred */
+@media (prefers-reduced-motion: reduce) {
+  .mf__container { --mf-glow: 1; background: var(--mf-mid); }
+  .mf__text {
+    width: 100%;
+    padding: 0 6vw;
+    white-space: normal;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+    font-size: 7vw;
+  }
+}
+
+/* ------------------------------------------------------------------ seams
+   Soft bands on the section edges that feather the neighbours' colours into
+   the stage. They scroll away as the stage pins and slide back in as it
+   releases. */
+.mf::before,
+.mf::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  height: 35vh;
+  pointer-events: none;
+}
+.mf::before {
+  top: 0;
+  background: linear-gradient(180deg,
+    var(--mf-above) 0%,
+    color-mix(in srgb, var(--mf-above) 70%, transparent) 25%,
+    color-mix(in srgb, var(--mf-above) 35%, transparent) 55%,
+    color-mix(in srgb, var(--mf-above) 10%, transparent) 80%,
+    transparent 100%);
+}
+.mf::after {
+  bottom: 0;
+  background: linear-gradient(0deg,
+    var(--mf-below) 0%,
+    color-mix(in srgb, var(--mf-below) 70%, transparent) 25%,
+    color-mix(in srgb, var(--mf-below) 35%, transparent) 55%,
+    color-mix(in srgb, var(--mf-below) 10%, transparent) 80%,
+    transparent 100%);
+}
+@media (max-width: 600px) {
+  .mf::before, .mf::after { height: 25vh; }
+}
+
+/* ------------------------------------------------------------------ manifesto → ROI
+   Night theme only. The second manifesto sits above the (black) ROI calculator,
+   not the wheel, so its maroon end is deepened and feathered into the ROI
+   section by a matching band on the ROI's top edge — no hard line. The first
+   manifesto (#section-manifesto-intro, before the wheel) keeps #420c24. */
+/* manifesto → industries wheel (night): instead of ending on a flat wine #420c24,
+   the stage stays on its dark ground with the brand glows still lit (most of their
+   strength held through the hand-off, --mf-glow-hold), so it reads like the middle
+   of the slide. The wheel-top feather band (js/section-seams.js) takes this colour. */
+html:not(.light) #section-manifesto-intro {
+  --mf-below: #0b0207;
+  --mf-glow-hold: 0.65;
+}
+html:not(.light) #section-manifesto {
+  --mf-below: #1a040d;
+}
+html:not(.light) #roi-calculator::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: min(420px, 45vh);
+  background: linear-gradient(180deg,
+    #1a040d 0%,
+    color-mix(in srgb, #1a040d 72%, transparent) 25%,
+    color-mix(in srgb, #1a040d 38%, transparent) 55%,
+    color-mix(in srgb, #1a040d 12%, transparent) 80%,
+    transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+html:not(.light) #roi-calculator > .page-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* ------------------------------------------------------------------ on the Platform cover
+   The manifesto opens inside the Platform deck's transition card (markup:
+   components/Platform/Platform.jsx, logic: legacy/toolkit.js): a layer over the
+   pinned stage, clipped to the card while it fills and grows, then the sentence
+   slides across. Same tokens as .mf (it is not inside one). */
+.tk__cover {
+  /* the sentence gets its own section: as the transition card fades, the layer
+     fades from transparent (--mf-above) to the solid page colour (--mf-mid),
+     covering the Platform title and cards, and only then does the sentence slide
+     in (legacy/toolkit.js). It ends on --mf-below for the testimonials. */
+  --mf-above: rgba(0, 0, 0, 0);
+  --mf-mid: #000000;
+  --mf-below: #000000;   /* = --background: the testimonial wall fades in from it */
+  --mf-ink: #f5e7df;
+  --mf-c1: #ff6a3d;
+  --mf-c2: #f73679;
+  --mf-c3: #e232db;
+  --mf-c4: #8b5cf6;
+  --mf-glow-a: rgba(255, 122, 69, 0.20);
+  --mf-glow-b: rgba(247, 54, 121, 0.26);
+  --mf-glow-c: rgba(226, 50, 219, 0.20);
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  height: 100%;
+  visibility: hidden;
+  pointer-events: none;
+  font-family: "Geist", "Geist Fallback", Arial, Helvetica, sans-serif;
+  background: var(--mf-stage, var(--mf-mid));
+  overflow: visible;   /* the glow feathers past the stage while it opens inside the card */
+  will-change: transform, clip-path;
+}
+.tk__cover.is-on { visibility: visible; }
+html.light .tk__cover {
+  --mf-above: rgba(253, 249, 251, 0);
+  --mf-mid: #fdf9fb;
+  --mf-below: #fdf9fb;   /* = --background: the testimonial wall fades in from it */
+  --mf-ink: #1f1d1d;
+  --mf-c1: #e8502f;
+  --mf-c2: #d81b60;
+  --mf-c3: #b5179e;
+  --mf-c4: #6d28d9;
+  --mf-glow-a: rgba(255, 122, 69, 0.12);
+  --mf-glow-b: rgba(247, 54, 121, 0.13);
+  --mf-glow-c: rgba(226, 50, 219, 0.10);
+}
+.tk__cover .mf__text .letter { will-change: transform; }
+
+/* the stage's own background behind the sentence, clipped to the transition card
+   (legacy/toolkit.js): the card reads as a window onto the stage, not a solid slab */
+.tk__cover-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 29;
+  visibility: hidden;
+  pointer-events: none;
+  background: inherit;   /* the .tk__container gradient, in both themes */
+}
+.tk__cover-bg.is-on { visibility: visible; }
+/* night theme: the stage also has a black fade over its top edge (palette.css,
+   .tk__container::before); the backdrop needs it too or the card's top reads lighter */
+html:not(.light) .tk__cover-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 36vh;
+  background: #000000;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.82) 22%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.18) 78%, transparent 100%);
+          mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.82) 22%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.18) 78%, transparent 100%);
+}

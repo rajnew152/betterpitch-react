@@ -1,0 +1,28 @@
+@keyframes lia-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes lia-ca-blink {
+  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+  30%            { opacity: 1;   transform: translateY(-2px); }
+}
+@keyframes lia-ca-bar {
+  0%, 100% { transform: scaleY(0.5); }
+  50%      { transform: scaleY(1.2); }
+}
+.lia-ca-dot { animation: lia-ca-blink 1.2s infinite ease-in-out; }
+.lia-ca-dot:nth-child(2) { animation-delay: 0.15s; }
+.lia-ca-dot:nth-child(3) { animation-delay: 0.30s; }
+.lia-ca-wave {
+  display: inline-block; width: 2px; background: #180a17;
+  border-radius: 2px; transform-origin: center bottom;
+  animation: lia-ca-bar 1s infinite ease-in-out;
+}
+.lia-ca-wave:nth-child(1) { height: 6px;  animation-delay: 0s;   }
+.lia-ca-wave:nth-child(2) { height: 10px; animation-delay: 0.1s; }
+.lia-ca-wave:nth-child(3) { height: 14px; animation-delay: 0.2s; }
+.lia-ca-wave:nth-child(4) { height: 10px; animation-delay: 0.3s; }
+.lia-ca-wave:nth-child(5) { height: 6px;  animation-delay: 0.4s; }
+.lia-ca-rise-msg      { animation: lia-rise 0.7s 0.05s both; }
+.lia-ca-rise-typing   { animation: lia-rise 0.7s 0.25s both; }
+.lia-ca-rise-composer { animation: lia-rise 0.8s 0.40s both; }

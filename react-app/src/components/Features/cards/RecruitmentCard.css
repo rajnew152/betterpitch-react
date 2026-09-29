@@ -1,0 +1,83 @@
+/*
+ * 12s looping cycle — each element's appear/hold/fade timing is encoded
+ * directly in its keyframe so every iteration stays perfectly staggered.
+ *
+ * Timeline (12s = 100%):
+ *  msg-0  : appears  0s  →  0.8s  (0%–7%)
+ *  msg-1  : appears  2s  →  2.8s  (17%–23%)
+ *  msg-2  : appears  4s  →  4.8s  (33%–40%)
+ *  card   : appears  6s  →  7.0s  (50%–58%)
+ *  all hold until 9s (75%), fade by 10.5s (87%), dark until 12s
+ */
+
+/* the phone stands upright and just floats */
+@keyframes lia-mh-phone-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+/* Messages only animate opacity — transform is handled by phone float */
+@keyframes lia-mh-seq-msg0 {
+  0%   { opacity: 0; }
+  7%   { opacity: 1; }
+  75%  { opacity: 1; }
+  87%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes lia-mh-seq-msg1 {
+  0%   { opacity: 0; }
+  17%  { opacity: 0; }
+  23%  { opacity: 1; }
+  75%  { opacity: 1; }
+  87%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes lia-mh-seq-msg2 {
+  0%   { opacity: 0; }
+  33%  { opacity: 0; }
+  40%  { opacity: 1; }
+  75%  { opacity: 1; }
+  87%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* Card animates opacity + its own transform (rotate + rise + fade) */
+@keyframes lia-mh-seq-card {
+  0%   { opacity: 0; transform: rotate(3deg) translateY(14px) scale(0.94); }
+  50%  { opacity: 0; transform: rotate(3deg) translateY(14px) scale(0.94); }
+  58%  { opacity: 1; transform: rotate(3deg) translateY(0)    scale(1);    }
+  75%  { opacity: 1; transform: rotate(3deg) translateY(0)    scale(1);    }
+  87%  { opacity: 0; transform: rotate(3deg) translateY(-5px) scale(0.96); }
+  100% { opacity: 0; transform: rotate(3deg) translateY(14px) scale(0.94); }
+}
+
+/* Peak glow moved to a ::after overlay, faded in/out via opacity
+   instead of animating box-shadow directly. The avatar's own inline
+   box-shadow is the resting/0% state already, so it's untouched. */
+@keyframes lia-mh-avatar-pulse {
+  0%, 100% { opacity: 0; }
+  50%      { opacity: 1; }
+}
+.lia-mh-avatar { position: relative; }
+.lia-mh-avatar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 24px rgba(255,68,106,0.90), 0 0 40px rgba(255,68,106,0.40);
+  opacity: 0;
+  animation: lia-mh-avatar-pulse 2.4s ease-in-out infinite;
+}
+@keyframes lia-mh-dot-blink {
+  0%, 60%, 100% { opacity: 0.25; transform: translateY(0); }
+  30%            { opacity: 1;    transform: translateY(-3px); }
+}
+
+.lia-mh-phone  { animation: lia-mh-phone-float  4s ease-in-out infinite; }
+.lia-mh-msg-0  { animation: lia-mh-seq-msg0     12s ease-in-out infinite; opacity: 0; }
+.lia-mh-msg-1  { animation: lia-mh-seq-msg1     12s ease-in-out infinite; opacity: 0; }
+.lia-mh-msg-2  { animation: lia-mh-seq-msg2     12s ease-in-out infinite; opacity: 0; }
+.lia-mh-card   { animation: lia-mh-seq-card     12s ease-in-out infinite; opacity: 0; }
+.lia-mh-dot    { animation: lia-mh-dot-blink    1.2s ease-in-out infinite; }
+.lia-mh-dot:nth-child(2) { animation-delay: 0.18s; }
+.lia-mh-dot:nth-child(3) { animation-delay: 0.36s; }

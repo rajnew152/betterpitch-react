@@ -1,0 +1,36 @@
+@keyframes lia-sonar {
+  0%   { transform: scale(0.72); opacity: 0; }
+  10%  { opacity: 0.62; }
+  100% { transform: scale(4.4); opacity: 0; }
+}
+.hero-atmosphere {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(172,33,88,0.24), transparent 34%),
+    radial-gradient(circle at 50% 50%, rgba(102,11,88,0.24), transparent 40%),
+    linear-gradient(180deg, rgba(255,255,255,0.02), transparent 24%),
+    linear-gradient(180deg, #020103 0%, #000 100%);
+}
+.light .hero-atmosphere {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(172,33,88,0.09), transparent 34%),
+    radial-gradient(circle at 50% 50%, rgba(102,11,88,0.09), transparent 40%),
+    linear-gradient(180deg, rgba(15,8,11,0.02), transparent 24%),
+    linear-gradient(180deg, #fdf4f8 0%, #ffffff 100%);
+}
+/* Entrance for the H1 + intro paragraph, in CSS rather than Framer
+   Motion. Framer's initial={ opacity: 0 } is serialized straight
+   into the SSR'd style attribute, so the LCP element (the H1) shipped
+   invisible and stayed that way until React hydrated and Framer's
+   animate prop ran — gating LCP on hydration instead of paint.
+   A CSS animation starts as soon as the browser applies styles, with
+   no JS required, so the element is on its way to visible from first
+   paint. The 'both' fill mode keeps the 0%-keyframe state
+   (opacity:0, translateY) before the animation starts, matching
+   Framer's old initial state. */
+@keyframes hero-intro-fade-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-intro-fade-up {
+  animation: hero-intro-fade-up 0.8s ease-out both;
+}

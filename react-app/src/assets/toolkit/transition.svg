@@ -1,0 +1,34 @@
+<svg width="295" height="417" viewBox="0 0 295 417" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Platform deck "transition" card in the Better Pitch skin: the voice demo card's
+     gradient (css/card-demo.css: orange #ff5a2c → red #f4301f → crimson #e8173f →
+     magenta #cf159f, pink highlight top right, deep magenta bottom left) with the
+     same soft blobs + grain as the other deck cards, and the white "bp" mark. -->
+<defs>
+<clipPath id="card"><rect width="295" height="417" rx="22.618"/></clipPath>
+<linearGradient id="base" x1="0.31" y1="0.03" x2="0.69" y2="0.97">
+<stop offset="0" stop-color="#ff5a2c"/><stop offset="0.36" stop-color="#f4301f"/><stop offset="0.66" stop-color="#e8173f"/><stop offset="1" stop-color="#cf159f"/>
+</linearGradient>
+<radialGradient id="gOrange" cx="0.14" cy="0.07" r="0.62"><stop offset="0" stop-color="#ff6e28" stop-opacity="0.7"/><stop offset="1" stop-color="#ff6e28" stop-opacity="0"/></radialGradient>
+<radialGradient id="gPink" cx="0.88" cy="0.04" r="0.55"><stop offset="0" stop-color="#ff96c8" stop-opacity="0.55"/><stop offset="1" stop-color="#ff96c8" stop-opacity="0"/></radialGradient>
+<radialGradient id="gRed" cx="1" cy="1" r="0.6"><stop offset="0" stop-color="#ec1a2c" stop-opacity="0.75"/><stop offset="1" stop-color="#ec1a2c" stop-opacity="0"/></radialGradient>
+<radialGradient id="gMagenta" cx="0" cy="1" r="0.8"><stop offset="0" stop-color="#d616d6" stop-opacity="0.9"/><stop offset="1" stop-color="#d616d6" stop-opacity="0"/></radialGradient>
+<filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0.29  0 0 0 0 0.03  0 0 0 0 0.12  0 0 0 1.1 -0.45"/></filter>
+<filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g clip-path="url(#card)">
+<rect width="295" height="417" fill="url(#base)"/>
+<rect width="295" height="417" fill="url(#gOrange)"/>
+<rect width="295" height="417" fill="url(#gPink)"/>
+<rect width="295" height="417" fill="url(#gRed)"/>
+<rect width="295" height="417" fill="url(#gMagenta)"/>
+<rect width="295" height="417" fill="#4A0820" filter="url(#grain)" opacity="0.16"/>
+</g>
+<!-- the Better Pitch "bp" mark (assets/logo/betterpitch-mark-white.svg), centred -->
+<g filter="url(#glow)" opacity="0.97">
+<g transform="translate(92.2 118) scale(0.885) translate(0 -8.5)" stroke="#ffffff" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" fill="none">
+<path d="M6.5 15V100M6.5 75a22 22 0 1 0 44 0a22 22 0 1 0 -44 0M73.5 50V132M73.5 75a22 22 0 1 1 44 0a22 22 0 1 1 -44 0"/>
+</g>
+</g>
+<rect x="89.5" y="262" width="116" height="30" rx="15" fill="#fff5f2"/>
+<text x="147.5" y="282" text-anchor="middle" font-family="Geist, Arial, Helvetica, sans-serif" font-size="13" font-weight="700" fill="#b0103a">Better Pitch</text>
+</svg>

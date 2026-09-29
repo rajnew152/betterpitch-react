@@ -1,0 +1,177 @@
+/* =============================================================================
+   mobile.css — mobile compatibility + touch-scroll smoothness. Loaded last,
+   after perf.css. Mostly rendering/behaviour hints; the "phone pass" block
+   below adds small phone-only (< 640px) fixes for readability, tap targets and
+   the chat orb's resting spot. Tablet and desktop are never affected.
+   ============================================================================= */
+
+/* Phones must never inflate text on rotate (iOS/Android "text size adjust"),
+   which would reflow the replicated sections. */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Wide decorative layers (endless marquees, outlined display text, the hero's
+   oversized orbit rings) may extend past the viewport edge on narrow screens.
+   They are pointer-events-none visuals, but on touch devices any overflow
+   becomes an accidental sideways pan of the whole page. `clip` removes that
+   without creating a scroll container, so position:sticky (team, journey,
+   feature pins) keeps working. */
+html,
+body {
+  overflow-x: clip;
+}
+@supports not (overflow: clip) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+}
+
+/* Touch feel: no grey/blue tap flash, and no 300ms double-tap-zoom delay on
+   controls (older Android WebView / iOS Safari). Vertical panning stays fully
+   native — smooth-scroll.js already leaves coarse pointers alone. */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+a,
+button,
+[role="button"],
+input,
+textarea,
+select,
+summary,
+label {
+  touch-action: manipulation;
+}
+
+/* Nested scrollables (card-demo transcript, chat code blocks, any Tailwind
+   overflow-auto region) keep iOS momentum scrolling and stop chain-scrolling
+   the page behind them when they hit their edge. */
+.bp-demo__log,
+.cp-msg-text pre,
+[class*="overflow-y-auto"],
+[class*="overflow-auto"] {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Form controls: stop iOS Safari zooming the page into a focused input when
+   its font-size computes under 16px. The chat/demo inputs already render at
+   16px-equivalent sizes; this is a floor, not a restyle, and only on phones. */
+@media (max-width: 639px) and (pointer: coarse) {
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input:not([type]),
+  textarea {
+    font-size: max(1em, 16px);
+  }
+}
+
+/* ------------------------------------------------------------------ phone pass
+   Phones only (< 640px). Tablet and desktop are untouched. Fixes found by
+   auditing 320–414px widths: a cramped header, the chat orb covering content,
+   sub-10px text and sub-44px tap targets. Same design, colours and structure. */
+@media (max-width: 639px) {
+  /* header: "Get in touch" never wraps onto two lines */
+  .sm-scope .sm-get-in-touch { white-space: nowrap; }
+
+  /* tap targets: invisible 44px hit areas around the small header controls,
+     without moving or resizing what is drawn */
+  .sm-scope .sm-toggle::before,
+  .sm-scope .sm-get-in-touch::before,
+  #theme-toggle::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+  }
+  .sm-scope .sm-toggle::before { inset: -15px -8px; }
+  #theme-toggle { position: relative; }
+
+  /* chat orb: parked bottom-right instead of bottom-centre, where it covered
+     the hero copy, the ROI controls, FAQ answers and footer links. While the
+     pill is open (.is-expanded, js/chat.js) it stays centred as before. */
+  #chat-launcher:not(.is-expanded) {
+    left: calc(100% - 16px - 31px);
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* readable minimums for text that scaled below ~10px on narrow screens */
+  #hero p.max-w-\[22rem\] { font-size: 0.7rem; }
+  #section-cinematic-project p.uppercase { font-size: 10px; }
+  .tk-flip__text { font-size: max(5.3cqw, 11px); }
+  .tk-flip__hint { font-size: max(3.6cqw, 9.5px); }
+  .bp-demo__kicker { font-size: max(0.78em, 10.5px); }
+  .bp-demo__label,
+  .bp-demo__error,
+  .bp-demo__status,
+  .bp-demo__end,
+  .bp-demo__msg--note { font-size: max(0.85em, 11.5px); }
+  .bp-demo__close { width: max(2.2em, 40px); height: max(2.2em, 40px); }
+
+  /* ROI "Hours saved / Agents reassigned" pair: at 320px the 2.8rem figure
+     filled its half and ran into the round » divider */
+  #roi-calculator .grid-cols-2.rounded-3xl > div { padding-inline: 1.25rem; }
+  #roi-calculator .grid-cols-2.rounded-3xl p.text-\[2\.8rem\] { font-size: clamp(1.9rem, 9.5vw, 2.8rem); }
+
+  /* ROI projection rows (label ─── value): both ends were shrink-0, so long
+     values ("17% of annual payroll") were cut off at the card edge */
+  #roi-calculator .flex.items-center.gap-3 > span.shrink-0 { flex-shrink: 1; min-width: 0; }
+  #roi-calculator .flex.items-center.gap-3 > span.shrink-0:last-child { text-align: right; }
+
+  /* footer links: taller hit area, same line positions */
+  #section-next a.text-sm {
+    display: inline-block;
+    padding-block: 10px;
+    margin-block: -10px;
+  }
+}
+/* the smallest phones (320–399px): tighter header so logo, Menu, Get in touch
+   and the theme toggle fit on one row without touching */
+@media (max-width: 399px) {
+  .sm-scope header > .pointer-events-auto.flex { gap: 0.7rem; }
+  .sm-scope .sm-get-in-touch { padding-inline: 0.65rem; letter-spacing: 0.12em; }
+}
+@media (max-width: 359px) {
+  .bp-logo-header { width: 5rem; }
+  /* the "Menu" word folds away; the + icon and its aria-label remain */
+  .sm-scope .sm-toggle > span:first-child { display: none; }
+}
+
+/* phones held sideways (short landscape, 640–1279px wide): the hero used the
+   tablet-portrait stack (orb above, copy pulled up under it), which on a ~340px
+   tall screen ran the heading under the logo and cut the paragraph off. Here it
+   sits side by side like desktop — copy left, orb right — sized to the height. */
+@media (orientation: landscape) and (max-height: 500px) and (min-width: 640px) and (max-width: 1279px) {
+  #hero .relative.grid.flex-1 {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 1.5rem;
+    padding-block: 3.25rem 0.5rem;
+  }
+  #hero .order-2.max-w-\[24rem\] { order: 1; margin-top: 0; align-self: center; }
+  #hero .relative.z-20.order-1 { order: 2; }
+  #hero .relative.z-20.order-1 > div { max-width: min(40vw, calc(100svh - 5rem)); }
+  #hero h1 { font-size: clamp(1.35rem, 7.5vh, 1.9rem); margin-bottom: 0.5rem; }
+  #hero p.max-w-\[22rem\] { font-size: 0.7rem; line-height: 1.5; }
+  /* chat orb parks bottom-right here too (see the phone pass above) */
+  #chat-launcher:not(.is-expanded) {
+    left: calc(100% - 16px - 31px);
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Users who ask the OS for reduced motion get it: decorative keyframe loops
+   (marquees, pulse rings, equalizer bars) settle immediately. The site's JS
+   already checks the same media query, so this only covers pure-CSS loops. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

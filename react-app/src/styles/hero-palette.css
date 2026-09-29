@@ -1,0 +1,54 @@
+/* =============================================================================
+   hero-palette.css — Better Pitch warm palette for the hero (orange → pink →
+   magenta, matching the service cards). Colour only: no layout changes.
+   The waveform / orbit colours themselves are drawn in js/waveform.js.
+   ============================================================================= */
+
+/* soft blush wash behind the hero (light theme); .hero-atmosphere is the
+   hero's empty full-size background layer */
+html.light #hero .hero-atmosphere {
+  background:
+    radial-gradient(38% 46% at 50% 47%, rgba(255, 120, 165, 0.20) 0%, transparent 70%),
+    radial-gradient(55% 60% at 0% 0%, rgba(255, 196, 214, 0.45) 0%, transparent 70%),
+    radial-gradient(50% 55% at 100% 8%, rgba(255, 186, 214, 0.40) 0%, transparent 70%),
+    radial-gradient(60% 55% at 100% 100%, rgba(255, 176, 204, 0.38) 0%, transparent 70%),
+    radial-gradient(55% 50% at 0% 100%, rgba(255, 206, 190, 0.35) 0%, transparent 70%),
+    linear-gradient(180deg, #fdf2f6 0%, #fcf0f4 100%);
+}
+/* glow behind the orb */
+#hero [class*="rgba(241,61,232,0.22)"] {
+  background:
+    radial-gradient(circle, rgba(255, 88, 150, 0.24), transparent 48%),
+    radial-gradient(circle at 30% 50%, rgba(255, 140, 60, 0.20), transparent 36%),
+    radial-gradient(circle at 72% 50%, rgba(206, 70, 255, 0.20), transparent 36%);
+}
+
+/* concentric guide rings (light theme): faint blush instead of grey */
+html.light #hero .rounded-full.border.border-foreground\/20 { border-color: rgba(236, 110, 150, 0.45); }
+
+/* mic button */
+#hero button[aria-label="Start voice input"].border-\[\#a420d1\] {
+  border-color: #ec4d78;
+  color: #e23d6a;
+  box-shadow: 0 0 24px rgba(255, 70, 120, 0.4);
+}
+html.light #hero button[aria-label="Start voice input"].border-\[\#a420d1\] {
+  background-color: rgba(255, 246, 249, 0.95);
+  box-shadow: 0 0 24px rgba(255, 70, 120, 0.18);
+}
+#hero button[aria-label="Start voice input"].border-\[\#a420d1\] > span[class*="rgba(215,60,255"] {
+  background: radial-gradient(circle, rgba(255, 80, 130, 0.35), transparent 70%);
+}
+html.light #hero button[aria-label="Start voice input"].border-\[\#a420d1\] > span[class*="rgba(215,60,255"] {
+  background: radial-gradient(circle, rgba(255, 80, 130, 0.14), transparent 70%);
+}
+#hero button[aria-label="Start voice input"].border-\[\#a420d1\] > svg.lucide-mic { color: #ffb3c6; }
+html.light #hero button[aria-label="Start voice input"].border-\[\#a420d1\] > svg.lucide-mic { color: #e23d6a; }
+
+/* light theme: the rail's top / bottom fades are solid-colour overlays that can't
+   match the blush wash, so fade the list itself with a mask instead */
+html.light #hero .relative.overflow-hidden:has(> .hero-rail-scroll) {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 2rem, #000 calc(100% - 2.5rem), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 2rem, #000 calc(100% - 2.5rem), transparent 100%);
+}
+html.light #hero .relative.overflow-hidden:has(> .hero-rail-scroll) > .pointer-events-none.absolute.inset-x-0 { display: none; }

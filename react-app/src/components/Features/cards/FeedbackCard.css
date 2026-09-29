@@ -1,0 +1,141 @@
+/*
+       * CYCLE=12s · HOLD_END=8.5s · FADE_END=9.5s
+       * All elements share the same holdEnd/fadeEnd → simultaneous exit.
+       * Timing is baked into keyframe percentages — no animation-delay.
+       */
+
+      /* Dashboard panel: scale from 0.92→1 */
+      @keyframes lia-db-panel {
+        0%          { opacity: 0; transform: scale(0.92); }
+        5%   { opacity: 1; transform: scale(1); }
+        70.8% { opacity: 1; transform: scale(1); }
+        79.2% { opacity: 0; transform: scale(0.96); }
+        100%        { opacity: 0; transform: scale(0.92); }
+      }
+
+      /* Stats — staggered fade-in */
+      @keyframes lia-db-stat-0 {
+        0%          { opacity: 0; transform: translateY(6px); }
+        4.2%   { opacity: 0; transform: translateY(6px); }
+        8.3%   { opacity: 1; transform: translateY(0); }
+        70.8% { opacity: 1; transform: translateY(0); }
+        79.2% { opacity: 0; transform: translateY(-4px); }
+        100%        { opacity: 0; transform: translateY(6px); }
+      }
+      @keyframes lia-db-stat-1 {
+        0%          { opacity: 0; transform: translateY(6px); }
+        7.5%   { opacity: 0; transform: translateY(6px); }
+        11.7%   { opacity: 1; transform: translateY(0); }
+        70.8% { opacity: 1; transform: translateY(0); }
+        79.2% { opacity: 0; transform: translateY(-4px); }
+        100%        { opacity: 0; transform: translateY(6px); }
+      }
+      @keyframes lia-db-stat-2 {
+        0%          { opacity: 0; transform: translateY(6px); }
+        10.8%   { opacity: 0; transform: translateY(6px); }
+        15%   { opacity: 1; transform: translateY(0); }
+        70.8% { opacity: 1; transform: translateY(0); }
+        79.2% { opacity: 0; transform: translateY(-4px); }
+        100%        { opacity: 0; transform: translateY(6px); }
+      }
+
+      /* Chart card container */
+      @keyframes lia-db-chart-card {
+        0%          { opacity: 0; }
+        12.5%   { opacity: 0; }
+        16.7%   { opacity: 1; }
+        70.8% { opacity: 1; }
+        79.2% { opacity: 0; }
+        100%        { opacity: 0; }
+      }
+
+      /* Chart line draw-in via stroke-dashoffset */
+      @keyframes lia-db-chart-line {
+        0%          { stroke-dashoffset: 600; opacity: 1; }
+        15%   { stroke-dashoffset: 600; opacity: 1; }
+        26.7%   { stroke-dashoffset: 0;   opacity: 1; }
+        70.8% { stroke-dashoffset: 0;   opacity: 1; }
+        79.2% { stroke-dashoffset: 0;   opacity: 0; }
+        100%        { stroke-dashoffset: 600; opacity: 0; }
+      }
+
+      /* Chart fill fade-in */
+      @keyframes lia-db-chart-fill {
+        0%          { opacity: 0; }
+        16.7%   { opacity: 0; }
+        25%   { opacity: 1; }
+        70.8% { opacity: 1; }
+        79.2% { opacity: 0; }
+        100%        { opacity: 0; }
+      }
+
+      /* Heatmap rows — generated */
+      
+@keyframes lia-db-row-0 {
+  0%             { opacity: 0; }
+  20.8%    { opacity: 0; }
+  25% { opacity: 1; }
+  70.8% { opacity: 1; }
+  79.2% { opacity: 0; }
+  100%           { opacity: 0; }
+}
+.lia-db-row-0 { animation: lia-db-row-0 12s ease-out infinite backwards; }
+
+@keyframes lia-db-row-1 {
+  0%             { opacity: 0; }
+  24.2%    { opacity: 0; }
+  28.3% { opacity: 1; }
+  70.8% { opacity: 1; }
+  79.2% { opacity: 0; }
+  100%           { opacity: 0; }
+}
+.lia-db-row-1 { animation: lia-db-row-1 12s ease-out infinite backwards; }
+
+@keyframes lia-db-row-2 {
+  0%             { opacity: 0; }
+  27.5%    { opacity: 0; }
+  31.7% { opacity: 1; }
+  70.8% { opacity: 1; }
+  79.2% { opacity: 0; }
+  100%           { opacity: 0; }
+}
+.lia-db-row-2 { animation: lia-db-row-2 12s ease-out infinite backwards; }
+
+@keyframes lia-db-row-3 {
+  0%             { opacity: 0; }
+  30.8%    { opacity: 0; }
+  35% { opacity: 1; }
+  70.8% { opacity: 1; }
+  79.2% { opacity: 0; }
+  100%           { opacity: 0; }
+}
+.lia-db-row-3 { animation: lia-db-row-3 12s ease-out infinite backwards; }
+
+@keyframes lia-db-row-4 {
+  0%             { opacity: 0; }
+  34.2%    { opacity: 0; }
+  38.3% { opacity: 1; }
+  70.8% { opacity: 1; }
+  79.2% { opacity: 0; }
+  100%           { opacity: 0; }
+}
+.lia-db-row-4 { animation: lia-db-row-4 12s ease-out infinite backwards; }
+
+
+      .lia-db-panel   { animation: lia-db-panel    12s ease-out  infinite backwards; }
+      .lia-db-stat-0  { animation: lia-db-stat-0   12s ease-out  infinite backwards; }
+      .lia-db-stat-1  { animation: lia-db-stat-1   12s ease-out  infinite backwards; }
+      .lia-db-stat-2  { animation: lia-db-stat-2   12s ease-out  infinite backwards; }
+      .lia-db-chart   { animation: lia-db-chart-card 12s ease-out infinite backwards; }
+      .lia-db-chart-line { animation: lia-db-chart-line 12s linear infinite backwards; }
+      .lia-db-chart-fill { animation: lia-db-chart-fill 12s ease-out infinite backwards; }
+
+      /* This mockup is shown inside a feature card that shrinks to ~84% of
+         viewport width on phones — on very narrow ones (e.g. Galaxy Fold's
+         ~280px cover screen) the three unbreakable stat numbers no longer
+         fit their columns and get clipped by the panel's overflow:hidden. */
+      @media (max-width: 359px) {
+        .lia-db-stats-row { gap: 4px !important; }
+        .lia-db-stat-0, .lia-db-stat-1, .lia-db-stat-2 { padding: 8px 6px !important; }
+        .lia-db-stat-value { font-size: 15px !important; }
+      }

@@ -1,0 +1,124 @@
+/* =============================================================================
+   particle-sphere.css — the hero voice visual (js/particle-sphere.js): the
+   aigentx-style particle sphere with the "AI" mark, its flickering grid and the
+   voice controls (js/voice.js) re-tinted to the sphere's teal.
+   ============================================================================= */
+
+/* the canvas bleeds half its size on every side (the reference's "overscan"),
+   so dispersing dots are never clipped at the frame */
+.bp-sphere-canvas {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  display: block;
+  pointer-events: none;
+}
+
+/* the mic, level bars and status sit under the "AI" mark instead of over it */
+.bp-sphere-module > .bp-sphere-controls { top: 83%; transition: top 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+@media (max-width: 639px) {
+  .bp-sphere-module > .bp-sphere-controls { top: 85%; }
+}
+
+/* voice session (.is-voice, toggled by js/hero.js): the sphere itself does the
+   voice animation (js/particle-sphere.js); the grid glows a touch brighter */
+.bp-sphere-grid { transition: opacity 0.7s ease; }
+.bp-sphere-module.is-voice > .bp-sphere-grid { opacity: 1.0; }
+/* while the dots form the voice orb, the bars + status sit above its centre wave
+   and the mic just below it, as on the original orb */
+.bp-sphere-module.is-voice > .bp-sphere-controls { top: 50%; }
+@media (prefers-reduced-motion: reduce) {
+  .bp-sphere-module > .bp-sphere-controls { transition: none; }
+}
+
+/* flickering grid behind the sphere: 32px cells, faded out towards the edges */
+.bp-sphere-grid {
+  position: absolute;
+  inset: -18%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background-image:
+    linear-gradient(to right, rgba(247, 54, 121, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(247, 54, 121, 0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
+  -webkit-mask-image: radial-gradient(closest-side, #000 35%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 35%, transparent 100%);
+}
+.bp-sphere-grid__box {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  background: rgba(226, 50, 219, 0.08);
+  opacity: 0;
+  animation: bp-sphere-cell 3.1s linear forwards;
+}
+/* in 0.8s, hold 1.5s, out 0.8s */
+@keyframes bp-sphere-cell {
+  0% { opacity: 0; }
+  25.8% { opacity: 1; }
+  74.2% { opacity: 1; }
+  100% { opacity: 0; }
+}
+/* the canvases' frame sits over the grid but must never catch the pointer: the
+   controls (mic button) stack above it, or the frame swallows their clicks */
+.bp-sphere-module > .relative.aspect-square { z-index: 1; pointer-events: none; }
+.bp-sphere-module > .bp-sphere-controls { z-index: 2; }
+
+html.light .bp-sphere-grid {
+  background-image:
+    linear-gradient(to right, rgba(216, 27, 96, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(216, 27, 96, 0.06) 1px, transparent 1px);
+}
+html.light .bp-sphere-grid__box { background: rgba(216, 27, 96, 0.07); }
+
+/* voice controls in the sphere's teal (state classes are toggled by js/voice.js) */
+.bp-sphere-module button {
+  border-color: rgba(247, 54, 121, 0.75) !important;
+  background-color: rgba(20, 6, 15, 0.88) !important;
+  box-shadow: 0 0 24px rgba(247, 54, 121, 0.38) !important;
+}
+.bp-sphere-module button.border-\[\#c832ff\] { border-color: #ff7ab8 !important; box-shadow: 0 0 30px rgba(255, 122, 184, 0.55) !important; }
+.bp-sphere-module button.border-rose-500\/70 { border-color: rgba(244, 63, 94, 0.7) !important; }
+.bp-sphere-module button > span { background: radial-gradient(circle, rgba(226, 50, 219, 0.4), transparent 70%) !important; }
+.bp-sphere-module button svg { color: #ff9ec4 !important; }
+/* no sonar rings while the agent speaks: the sphere itself carries the voice */
+.bp-sphere-module .border-violet-400\/60 { display: none !important; }
+.bp-sphere-module [role="status"] { border-color: rgba(247, 54, 121, 0.2) !important; border-top-color: #f73679 !important; }
+
+html.light .bp-sphere-module button {
+  border-color: rgba(216, 27, 96, 0.75) !important;
+  background-color: rgba(255, 245, 248, 0.96) !important;
+  box-shadow: 0 0 24px rgba(216, 27, 96, 0.18) !important;
+}
+html.light .bp-sphere-module button > span { background: radial-gradient(circle, rgba(216, 27, 96, 0.14), transparent 70%) !important; }
+html.light .bp-sphere-module button svg { color: #b5179e !important; }
+html.light .bp-sphere-module [role="status"] { border-color: rgba(216, 27, 96, 0.18) !important; border-top-color: #d81b60 !important; }
+
+/* voice level bars (the "voice modulation" row, scaled by js/voice.js): the brand
+   run of the sphere, orange → coral → pink → magenta → violet across the seven
+   bars, each lit from top to bottom and glowing in its own colour */
+.bp-sphere-controls > .gap-1\.5 > span {
+  --bar-a: #ff8a3d;
+  --bar-b: #ff4d6d;
+  background: linear-gradient(180deg, var(--bar-a) 0%, var(--bar-b) 100%) !important;
+  box-shadow: 0 0 10px color-mix(in srgb, var(--bar-b) 85%, transparent), 0 0 22px color-mix(in srgb, var(--bar-a) 55%, transparent) !important;
+}
+.bp-sphere-controls > .gap-1\.5 > span:nth-child(1) { --bar-a: #ffb04d; --bar-b: #ff6a3d; }
+.bp-sphere-controls > .gap-1\.5 > span:nth-child(2) { --bar-a: #ff8a3d; --bar-b: #ff4d6d; }
+.bp-sphere-controls > .gap-1\.5 > span:nth-child(3) { --bar-a: #ff5f8a; --bar-b: #f73679; }
+.bp-sphere-controls > .gap-1\.5 > span:nth-child(4) { --bar-a: #ff5fd2; --bar-b: #e232db; }
+.bp-sphere-controls > .gap-1\.5 > span:nth-child(5) { --bar-a: #e86bff; --bar-b: #c43cf0; }
+.bp-sphere-controls > .gap-1\.5 > span:nth-child(6) { --bar-a: #c27bff; --bar-b: #9b5cff; }
+.bp-sphere-controls > .gap-1\.5 > span:nth-child(7) { --bar-a: #a98bff; --bar-b: #7c4dff; }
+/* light theme: deeper stops that hold up on the pale ground, softer glow */
+html.light .bp-sphere-controls > .gap-1\.5 > span { box-shadow: 0 0 8px color-mix(in srgb, var(--bar-b) 45%, transparent) !important; }
+html.light .bp-sphere-controls > .gap-1\.5 > span:nth-child(1) { --bar-a: #f07a2a; --bar-b: #e8502f; }
+html.light .bp-sphere-controls > .gap-1\.5 > span:nth-child(2) { --bar-a: #ef5a3a; --bar-b: #e0304f; }
+html.light .bp-sphere-controls > .gap-1\.5 > span:nth-child(3) { --bar-a: #e8336a; --bar-b: #d81b60; }
+html.light .bp-sphere-controls > .gap-1\.5 > span:nth-child(4) { --bar-a: #d62a9a; --bar-b: #b5179e; }
+html.light .bp-sphere-controls > .gap-1\.5 > span:nth-child(5) { --bar-a: #b52fc4; --bar-b: #9420b8; }
+html.light .bp-sphere-controls > .gap-1\.5 > span:nth-child(6) { --bar-a: #9a3ce0; --bar-b: #7c2fd6; }
+html.light .bp-sphere-controls > .gap-1\.5 > span:nth-child(7) { --bar-a: #7f45e8; --bar-b: #6d28d9; }

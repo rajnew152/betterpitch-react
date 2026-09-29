@@ -1,0 +1,6 @@
+/* Scoped to this section only, and only while it is out of view. */
+.lia-fc-offscreen *,
+.lia-fc-offscreen *::before,
+.lia-fc-offscreen *::after {
+  animation-play-state: paused !important;
+}

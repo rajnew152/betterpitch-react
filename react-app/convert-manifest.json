@@ -1,0 +1,101 @@
+{
+  "appChildren": [
+    {
+      "name": "Hero",
+      "rel": "components/Hero/Hero.jsx"
+    },
+    {
+      "name": "FeaturesMobile",
+      "rel": "components/Features/FeaturesMobile.jsx"
+    },
+    {
+      "name": "ManifestoIntro",
+      "rel": "components/Manifesto/ManifestoIntro.jsx"
+    },
+    {
+      "name": "Industries",
+      "rel": "components/Industries/Industries.jsx"
+    },
+    {
+      "name": "Journey",
+      "rel": "components/Journey/Journey.jsx"
+    },
+    {
+      "name": "Platform",
+      "rel": "components/Platform/Platform.jsx"
+    },
+    {
+      "name": "Manifesto",
+      "rel": "components/Manifesto/Manifesto.jsx"
+    },
+    {
+      "name": "RoiCalculator",
+      "rel": "components/RoiCalculator/RoiCalculator.jsx"
+    },
+    {
+      "name": "Faq",
+      "rel": "components/Faq/Faq.jsx"
+    },
+    {
+      "name": "Testimonials",
+      "rel": "components/Testimonials/Testimonials.jsx"
+    },
+    {
+      "name": "Footer",
+      "rel": "components/Footer/Footer.jsx"
+    },
+    {
+      "name": "HeroCaption",
+      "rel": "components/Hero/HeroCaption.jsx"
+    },
+    {
+      "name": "Navbar",
+      "rel": "components/Navbar/Navbar.jsx"
+    },
+    {
+      "name": "SectionNav",
+      "rel": "components/SectionNav/SectionNav.jsx"
+    },
+    {
+      "name": "Chat",
+      "rel": "components/Chat/Chat.jsx"
+    }
+  ],
+  "ldJson": [
+    "{\"@context\":\"https://schema.org\",\"@type\":\"Organization\",\"name\":\"Better Pitch\",\"description\":\"Enterprise AI deployment company and home of the most natural voice AI: real emotion, 100+ languages and dialects, sub-300ms responses.\"}",
+    "{\"@context\":\"https://schema.org\",\"@type\":\"WebSite\",\"name\":\"Better Pitch\"}",
+    "{\"@context\":\"https://schema.org\",\"@type\":\"SoftwareApplication\",\"name\":\"Better Pitch Voice AI\",\"applicationCategory\":\"BusinessApplication\",\"operatingSystem\":\"Web\",\"description\":\"Voice AI agents for sales, support, collections, scheduling, feedback, recruitment and commerce calls.\",\"offers\":{\"@type\":\"Offer\",\"price\":\"2999\",\"priceCurrency\":\"INR\"}}",
+    "{\"@context\":\"https://schema.org\",\"@type\":\"FAQPage\",\"mainEntity\":[{\"@type\":\"Question\",\"name\":\"What is Better Pitch?\",\"acceptedAnswer\":{\"@type\":\"Answer\",\"text\":\"Better Pitch is a real-time voice AI platform that speaks 30+ languages and dialects, including Hindi, Hinglish, Tamil and Telugu, with sub-300ms latency. It runs outbound campaigns, inbound routing, IVR flows, bookings and post-call analytics out of the box.\"}},{\"@type\":\"Question\",\"name\":\"Can Better Pitch switch languages mid-call?\",\"acceptedAnswer\":{\"@type\":\"Answer\",\"text\":\"Yes. Better Pitch detects the language the caller responds in and adapts mid-call. It is especially strong at Hindi, Hinglish and English switching, which happens naturally in almost every Indian business call.\"}},{\"@type\":\"Question\",\"name\":\"How secure is my data with Better Pitch?\",\"acceptedAnswer\":{\"@type\":\"Answer\",\"text\":\"Every call is encrypted in transit and at rest, with role-based workspace permissions, audit-ready records and India data-residency options. We are SOC 2, GDPR and HIPAA ready, with CERT-In empanelled VAPT.\"}},{\"@type\":\"Question\",\"name\":\"What can an agent do during a call?\",\"acceptedAnswer\":{\"@type\":\"Answer\",\"text\":\"Every agent can end calls gracefully, transfer to a fixed or dynamic number, run IVR and press-digit flows, and trigger custom functions that call your APIs mid-call, then continue naturally with the response.\"}},{\"@type\":\"Question\",\"name\":\"Do I need a credit card to start?\",\"acceptedAnswer\":{\"@type\":\"Answer\",\"text\":\"No. You can sign up and explore the full Better Pitch platform for free without a credit card. Paid plans start at ₹2,999/month, with GST invoices and cancel-anytime billing.\"}}]}"
+  ],
+  "preloaderHtml": "<div id=\"site-preloader\" class=\"fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-5 bg-background\" style=\"clip-path:circle(150% at 50% 50%)\"><img class=\"bp-logo-preloader\" src=\"assets/betterpitch.svg\" alt=\"Better Pitch\" width=\"609\" height=\"130\"/><div class=\"h-px w-14 overflow-hidden rounded-full bg-foreground/10\"><div class=\"h-full w-full bg-foreground/50\" style=\"transform:translateX(-100%)\"></div></div></div>",
+  "files": [
+    "components/Hero/HeroHeadline.jsx",
+    "components/Hero/VoiceAgent.jsx",
+    "components/Hero/ServiceRail.jsx",
+    "components/Hero/HeroIntro.jsx",
+    "components/Features/cards/SalesLeadsCard.jsx",
+    "components/Features/cards/CustomerSupportCard.jsx",
+    "components/Features/cards/CollectionsCard.jsx",
+    "components/Features/cards/AppointmentsCard.jsx",
+    "components/Features/cards/FeedbackCard.jsx",
+    "components/Features/cards/RecruitmentCard.jsx",
+    "components/Features/cards/EcommerceCard.jsx",
+    "components/Features/cards/RealEstateCard.jsx",
+    "components/Features/FeatureCarousel.jsx",
+    "components/Hero/Hero.jsx",
+    "components/Features/FeaturesMobile.jsx",
+    "components/Manifesto/ManifestoIntro.jsx",
+    "components/Industries/Industries.jsx",
+    "components/Journey/Journey.jsx",
+    "components/Platform/Platform.jsx",
+    "components/Manifesto/Manifesto.jsx",
+    "components/RoiCalculator/RoiCalculator.jsx",
+    "components/Faq/Faq.jsx",
+    "components/Testimonials/Testimonials.jsx",
+    "components/Footer/Footer.jsx",
+    "components/Hero/HeroCaption.jsx",
+    "components/Navbar/Navbar.jsx",
+    "components/SectionNav/SectionNav.jsx",
+    "components/Chat/Chat.jsx"
+  ]
+}

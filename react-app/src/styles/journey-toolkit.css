@@ -1,0 +1,488 @@
+/* =============================================================================
+   journey-toolkit.css — the two sections appended after the footer, replicated
+   from https://guillaumezhu.com/ ("Today / I bridge / the two." + "Toolkit").
+   Self-contained: fixed cream/dark palette (independent of the site theme),
+   Geist for type. Scroll logic lives in js/journey.js and js/toolkit.js.
+   ============================================================================= */
+:root {
+  --gz-cream: #f5e7df;
+  --gz-dark: #000000;
+  --gz-black: #0a0a0a;
+  --gz-font: "Geist", "Geist Fallback", Arial, Helvetica, sans-serif;
+}
+
+/* ------------------------------------------------------------------ journey */
+.traj {
+  position: relative;
+  overflow: hidden;
+  background: var(--gz-dark);
+  color: var(--gz-cream);
+  font-family: var(--gz-font);
+}
+.traj__pin-height { height: 1400vh; } /* slower Emotion → meets → outcomes (was 930vh; the 0.65-unit shorter "Emotion" hold still applies, js/journey.js) */
+.traj__container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--gz-dark);
+  will-change: transform;
+}
+.traj__center { position: relative; z-index: 2; width: 100%; }
+.traj__sentence {
+  width: 100%;
+  text-align: center;
+  font-size: 10vw;
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.025em;
+  color: var(--gz-cream);
+}
+.traj__sentence:not(:first-child) { position: absolute; top: 0; left: 0; }
+.traj__sentence span { display: inline-block; will-change: transform; }
+.traj__visuals { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.traj__visual {
+  position: absolute;
+  top: 50%;
+  width: 48vw;
+  height: 30vh;
+  opacity: 0;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  will-change: transform, width, height, opacity, border-radius;
+}
+/* image attaches once the window has loaded (html.bp-loaded, src/main.jsx), off the critical path */
+/* --traj-bg: the same picture re-graded to the brand skin per theme (js/journey-fluid.js) */
+html.bp-loaded .traj__visual { background-image: var(--traj-bg, url("../assets/trajectory/background.webp")); }
+/* both blocks show one stage-sized picture (--traj-bg: the voice card gradient painted by
+   js/journey-fluid.js), so they read as one continuous gradient where they meet */
+.traj__visual--left { left: 0; background-position: 0% 50%; border-radius: 0 24px 24px 0; }
+.traj__visual--right { right: 0; background-position: 100% 50%; border-radius: 24px 0 0 24px; }
+/* fine grain over the gradient (the original renders the image through a shader) */
+.traj__visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0.22;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iMC45IiBudW1PY3RhdmVzPSIyIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PGZlQ29sb3JNYXRyaXggdmFsdWVzPSIwIDAgMCAwIDEgMCAwIDAgMCAxIDAgMCAwIDAgMSAwIDAgMCAwLjYgMCIvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNuKSIvPjwvc3ZnPg==");
+  pointer-events: none;
+}
+/* brand gradient on "Emotion" and "meets": one gradient across the whole word,
+   orange → pink → magenta → violet (the same run as the slices beside "meets").
+   Each letter is its own animated span, so each paints its slice of the word-wide
+   gradient: js/journey.js sets --gw (word width) and --gx (letter offset).
+   Night stops are brighter (they start on black, end on cream); day stops are
+   deeper so they hold up on the near-white stage. */
+.traj__sentence.is-today,
+.traj__sentence.is-dialogue {
+  /* night: the Better Pitch palette — bright orange → coral red → deep pink */
+  --traj-grad: linear-gradient(90deg, #FE6328 0%, #F53521 50%, #E61746 100%);
+}
+html.light .traj__sentence.is-today,
+html.light .traj__sentence.is-dialogue {
+  --traj-grad: linear-gradient(90deg, #e8502f 0%, #d81b60 38%, #b5179e 68%, #6d28d9 100%);
+}
+.traj__sentence.is-today .letter,
+.traj__sentence.is-dialogue .letter {
+  background-image: var(--traj-grad);
+  background-size: var(--gw, 100%) 100%;
+  background-position: calc(var(--gx, 0px) * -1) 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* room for descenders / overshoot so the clip never shaves glyph edges */
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+@media (max-width: 768px) {
+  .traj__pin-height { height: 620vh; } /* was 415vh */
+  .traj__sentence { font-size: clamp(42px, 12vw, 60px); }
+  .traj__visual { height: 26vh; }
+}
+
+/* ------------------------------------------------------------------ toolkit */
+.tk {
+  position: relative;
+  background: var(--gz-dark);
+  color: var(--gz-cream);
+  font-family: var(--gz-font);
+}
+.tk__pin-height { height: 700vh; }
+/* art-direction deck only (tools/brand-content.js drops the front-end deck): the
+   art phases keep the scroll length they had inside the full 700vh sequence */
+.tk--art-only .tk__pin-height { height: 1150vh; } /* includes a hold with the fan fully open (js/toolkit.js) */
+.tk__container {
+  position: relative;
+  z-index: 1;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--gz-dark);
+}
+.tk__header {
+  position: absolute;
+  top: 18vh;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  text-align: center;
+  pointer-events: none;
+}
+.tk__title {
+  margin: 0;
+  font-size: max(48px, 6vw);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--gz-cream);
+}
+.tk__subtitle-wrap {
+  position: relative;
+  height: 3.2em;
+  margin-top: 2vh;
+  overflow: hidden;
+  font-size: max(20px, 2vw);
+}
+.tk__subtitle {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  font-size: inherit;
+  font-weight: 300;
+  line-height: 1.3;
+  text-align: center;
+  color: var(--gz-cream);
+}
+.tk__wheel {
+  position: absolute;
+  /* --tk-wheel-top is set by js/toolkit.js when the cards would touch the subtitle */
+  top: var(--tk-wheel-top, 58vh);
+  left: -100%;
+  width: 300%;
+  aspect-ratio: 1;
+  margin: 0;
+}
+.tk__wheel--frontend { z-index: 1; }
+.tk__wheel--art { z-index: 2; opacity: 0; pointer-events: none; }
+.tk__slot {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+  transform-origin: 50% 50%;
+  pointer-events: none;
+}
+.tk__slot.is-visible { visibility: visible; }
+.tk-card {
+  position: relative;
+  width: var(--tk-card-w, clamp(180px, 18vw, 295px));
+  aspect-ratio: 295 / 417;
+  margin: 0 auto;
+  transform: translateY(-50%);
+  transition: transform 0.2s ease-out;
+  will-change: transform;
+  pointer-events: none;
+  cursor: default;
+}
+.tk__wheel.is-interactive .tk-card { pointer-events: auto; cursor: pointer; }
+@media (any-hover: hover) and (any-pointer: fine) {
+  .tk__wheel.is-interactive .tk-card:hover { transform: translateY(-54%) scale(1.04); }
+}
+.tk-card__motion { will-change: transform; }
+.tk-card img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.tk-card--flip { perspective: 2000px; }
+.tk-card__flipper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform-origin: 50% 50%;
+}
+.tk-card__face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.tk-card__face--front { transform: rotateY(0deg); }
+.tk-card__face--back { transform: rotateY(180deg); }
+/* last art-direction card: fills with cream from the bottom, then grows over the stage */
+.tk-card--transition { border-radius: 6.8% / 4.8%; overflow: hidden; }
+.tk-card__cream {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+/* the reference breakpoints (same order) */
+@media (max-width: 600px) and (orientation: portrait) {
+  .tk-card { width: var(--tk-card-w, min(clamp(140px, 48vw, 180px), 25svh)); }
+}
+@media (min-width: 601px) and (max-height: 1000px) {
+  .tk__wheel { top: var(--tk-wheel-top, 67svh); }
+  .tk-card { width: var(--tk-card-w, min(clamp(180px, 18vw, 295px), 29svh)); }
+}
+@media (min-width: 1025px) {
+  .tk__header { top: 12vh; }
+  .tk__wheel { top: var(--tk-wheel-top, 51vh); }
+}
+@media (min-width: 1025px) and (max-height: 1000px) {
+  .tk__wheel { top: var(--tk-wheel-top, 60svh); }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .tk__header { top: 4svh; }
+  .tk__wheel { top: var(--tk-wheel-top, 65svh); }
+  .tk-card { width: var(--tk-card-w, min(180px, 32svh)); }
+}
+
+/* ------------------------------------------------------- next / contact card */
+.nx {
+  position: relative;
+  background: var(--gz-dark);
+  color: var(--gz-cream);
+  font-family: var(--gz-font);
+}
+/* scroll length of the pinned sentence: longer = slower writing (was 500vh) */
+.nx__pin-height { height: 800vh; }
+.nx__container {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--gz-dark);
+}
+.nx__svg {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 2;
+  display: block;
+  width: 300vw;
+  height: auto;
+  overflow: visible;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+.nx__text {
+  fill: var(--gz-cream);
+  font-family: var(--gz-font);
+  font-size: 220px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+.nx__orb { opacity: 0; visibility: hidden; pointer-events: none; }
+.nx__sr-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.nx-footer {
+  --nx-inset: 18px;
+  position: absolute;
+  left: var(--nx-inset);
+  right: var(--nx-inset);
+  bottom: var(--nx-inset);
+  z-index: 1;
+  height: calc(50vh - var(--nx-inset));
+  overflow: hidden;
+  border-radius: 18px;
+  clip-path: circle(0);
+  will-change: clip-path;
+  pointer-events: none;
+}
+/* the globe footer (#section-footer, moved in by tools/next-globe.js) fills the card:
+   globe and stars stay absolute at its bottom, the logo and links sit on top of them */
+.nx-footer > #section-footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+}
+.nx-footer__background {
+  position: absolute;
+  inset: 0;
+  background: url("../assets/footer/background.webp") 32% 50% / cover no-repeat;
+}
+.nx-footer__content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 100px;
+  color: var(--gz-cream);
+}
+.nx-footer__inner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: clamp(64px, 10vw, 180px);
+  width: 100%;
+}
+.nx-footer__main {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 50px;
+  min-width: 0;
+}
+.nx-footer__headline {
+  max-width: 950px;
+  margin: 0;
+  font-size: clamp(32px, 3.3vw, 72px);
+  font-weight: 500;
+  line-height: 1.14;
+  letter-spacing: -0.025em;
+}
+.nx-footer__meta {
+  display: flex;
+  align-items: center;
+  gap: clamp(24px, 4vw, 56px);
+  font-size: clamp(16px, 1.1vw, 20px);
+  font-weight: 400;
+}
+.nx-footer__meta p { margin: 0; }
+.nx-footer__meta a,
+.nx-footer__group a { color: inherit; text-decoration: none; transition: opacity 0.2s ease; }
+.nx-footer__meta a:hover,
+.nx-footer__group a:hover { opacity: 0.7; }
+.nx-footer__nav {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: flex-start;
+  gap: clamp(24px, 4vw, 56px);
+  padding-top: clamp(4px, 1vh, 16px);
+}
+.nx-footer__group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(8px, 1.3vh, 18px);
+  min-width: clamp(110px, 8vw, 160px);
+}
+.nx-footer__group-title {
+  margin: 0 0 clamp(8px, 1.4vh, 18px);
+  font-size: clamp(24px, 2vw, 30px);
+  font-weight: 500;
+  line-height: 1;
+}
+.nx-footer__group a {
+  font-size: clamp(20px, 1.2vw, 24px);
+  font-weight: 400;
+  line-height: 1.2;
+}
+@media (min-width: 1280px) {
+  .nx__text { font-size: 240px; }
+}
+@media (max-width: 1024px) {
+  .nx__pin-height { height: 720vh; } /* was 450vh */
+  .nx-footer {
+    --nx-inset: max(8px, 1vw);
+    height: calc(min(65svh, 720px) - var(--nx-inset));
+  }
+  .nx-footer__content { align-items: stretch; padding: clamp(30px, 7vw, 40px); }
+  .nx-footer__inner { flex-direction: column; gap: clamp(16px, 2.5svh, 32px); }
+  .nx-footer__main { gap: clamp(16px, 2svh, 24px); }
+  .nx-footer__headline { font-size: clamp(30px, 6vw, 48px); }
+  .nx-footer__meta { flex-wrap: wrap; gap: clamp(8px, 2vw, 24px); }
+  .nx-footer__nav { justify-content: flex-start; gap: clamp(64px, 10vw, 96px); width: 100%; padding-top: 0; }
+  .nx-footer__group { gap: clamp(10px, 1svh, 18px); min-width: 0; }
+  .nx-footer__group-title { margin-bottom: 0; font-size: clamp(22px, 3.5vw, 28px); }
+  .nx-footer__group a { font-size: 18px; }
+}
+@media (max-width: 640px) {
+  .nx-footer { height: calc(70svh - var(--nx-inset)); }
+  .nx-footer__content { padding: clamp(16px, 3vw, 24px); }
+  .nx-footer__inner { gap: clamp(24px, 5vw, 48px); }
+  .nx-footer__main { gap: 12px; }
+  .nx-footer__headline { font-size: clamp(22px, 3.2vw, 28px); }
+  .nx-footer__meta { gap: 16px; font-size: 14px; }
+  .nx-footer__nav { gap: clamp(20px, 4vw, 32px); }
+  .nx-footer__group { gap: 6px; }
+  .nx-footer__group-title { font-size: 20px; }
+}
+
+/* ------------------------------------------------- globe footer, dark blend
+   The revealed footer card shows only the globe on the section's own dark
+   background, whatever the site theme: no pink halo/rim, no colour washes,
+   no white bottom fade, dark map texture, and light text for the links.
+   (The halo/rim divs carry inline styles, hence the display:none selectors.) */
+.nx-footer #section-footer {
+  background: #000000;                /* palette.css paints .nx__container black */
+  --background: 0 0% 0%;              /* keep any bg-background children dark */
+  --foreground: 40 12% 92%;           /* cream-white links/logo text */
+  --fg-rgb: 236, 233, 230;
+}
+html.bp-loaded.light .nx-footer .footer-globe-texture { background-image: url("../assets/map.webp"); } /* html.bp-loaded: see src/main.jsx */
+.nx-footer .footer-globe-texture {
+  /* pull the map's purple-magenta land into the site's warm pink family
+     (brand pink ≈ hsl(341°); the texture sits ≈ 30° cooler); the contrast
+     boost sinks the dark water towards the black background while the
+     bright land keeps its glow */
+  /* soft, matte land: desaturated towards white so it reads orange-pink-white
+     rather than neon magenta */
+  filter: hue-rotate(32deg) saturate(0.65) brightness(1.25) contrast(1.18);
+}
+.light .nx-footer .footer-globe-wash { background: transparent; }
+/* brand sweep: a gentle orange → pink → warm-white drift across the land;
+   soft-light blend tints the bright landmass while the dark water stays black */
+.nx-footer .footer-globe-wash,
+.light .nx-footer .footer-globe-wash {
+  background: linear-gradient(100deg, rgba(255, 150, 90, 0.35) 0%, rgba(247, 96, 140, 0.32) 50%, rgba(255, 228, 238, 0.3) 100%);
+  mix-blend-mode: soft-light;
+}
+.nx-footer .footer-globe-shade,
+.light .nx-footer .footer-globe-shade {
+  /* symmetric, gentle vignette: the visible band of the globe stays as bright
+     on the bottom-left as on the bottom-right (the old ellipse sat at 68% and
+     drowned the left half in black) */
+  background: radial-gradient(ellipse at 50% 42%, transparent 55%, rgba(0, 0, 0, 0.45) 78%, rgba(0, 0, 0, 0.9) 95%);
+}
+.nx-footer #section-footer > .absolute.inset-0,   /* the two radial colour washes */
+.nx-footer #section-footer > [style*="box-shadow"], /* the pink halo ring */
+.nx-footer .footer-globe-shade ~ div,             /* inner red shadow + pink rim */
+.nx-footer #section-footer > .footer-bottom-fade { /* the white bottom fade */
+  display: none;
+}
+
+/* interactive dotted globe (js/globe-3d.js): once the canvas is ready the
+   flat map layers hide; if the script can't build the globe they stay */
+.lia-globe3d-on .footer-globe-texture,
+.lia-globe3d-on .footer-globe-wash,
+.lia-globe3d-on .footer-globe-shade { display: none; }
+.lia-globe3d-canvas {
+  /* lives in #section-footer (not the clipped globe circle): centred like the
+     holder, width / height / bottom set by js/globe-3d.js, under the links (z-20) */
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 1;
+  transform: translateX(-50%);
+  pointer-events: auto;   /* the canvas drags; the links above it stay clickable */
+  cursor: grab;
+  touch-action: pan-y;    /* horizontal drag spins, vertical scroll still works */
+}
+.lia-globe3d-canvas:active { cursor: grabbing; }

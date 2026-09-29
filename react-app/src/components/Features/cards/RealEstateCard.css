@@ -1,0 +1,50 @@
+@keyframes lia-mm-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.lia-mm-rise-1 { animation: lia-mm-rise 0.7s 0.05s both; }
+.lia-mm-rise-2 { animation: lia-mm-rise 0.7s 0.25s both; }
+.lia-mm-rise-3 { animation: lia-mm-rise 0.7s 0.45s both; }
+.lia-mm-rise-4 { animation: lia-mm-rise 0.7s 0.65s both; }
+
+@keyframes lia-mm-live {
+  0%,100% { opacity:1; }
+  50%     { opacity:0.25; }
+}
+.lia-mm-live-dot { animation: lia-mm-live 2s ease-in-out infinite; }
+
+@keyframes lia-mm-sheen-move {
+  0%   { transform: translateX(-120%) skewX(-15deg); }
+  60%, 100% { transform: translateX(160%) skewX(-15deg); }
+}
+.lia-mm-thumb { animation: lia-mm-rise 0.6s both; animation-delay: inherit; }
+.lia-mm-sheen {
+  position: absolute; top: 0; bottom: 0; left: 0; width: 45%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent);
+  animation: lia-mm-sheen-move 3.4s ease-in-out infinite;
+  animation-delay: inherit;
+}
+
+/* Scale stays a direct animation (already compositor-friendly). The
+   shadow's own change is split into a ::after overlay faded via
+   opacity instead — it inherits the parent's scale automatically
+   since transforms apply to descendants too, so the glow still
+   grows/shrinks in sync with the button. */
+@keyframes lia-mm-play-scale {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.1); }
+}
+@keyframes lia-mm-play-glow {
+  0%, 100% { opacity: 0; }
+  50%      { opacity: 1; }
+}
+.lia-mm-play { position: relative; animation: lia-mm-play-scale 1.8s ease-in-out infinite; }
+.lia-mm-play::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.45);
+  opacity: 0;
+  animation: lia-mm-play-glow 1.8s ease-in-out infinite;
+}

@@ -1,0 +1,343 @@
+/* =============================================================================
+   testimonials.css — the Results wall (#testimonials), styled after slothUI's
+   testimonial masonry (dribbble.com/shots/24428142): a lavender panel, one
+   viewport tall, split in two — intro copy on the left, three columns of
+   rounded cards on the right drifting vertically (columns 1 and 3 move up,
+   column 2 moves down). Each column's card set is cloned by js/testimonials.js
+   until it covers the wall, so the loop is seamless; the animation only starts
+   once the section carries .is-ready (no clone → no motion, never a gap).
+   ============================================================================= */
+.tw {
+  position: relative;
+  background: #fbe9f2;
+  color: #331226;
+  /* the tilted wall's corners must not add a horizontal scrollbar */
+  overflow-x: clip;
+}
+/* soft seam: the top of the panel fades out of the previous section's page
+   background (works in both themes — --background flips with the theme), so
+   the FAQ and the testimonial wall read as one continuous surface */
+.tw::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: min(320px, 38vh);
+  background: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--background) / 0.6) 45%, hsl(var(--background) / 0) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+/* night theme only: the wall sits on a deep plum-black panel that matches the
+   site's dark surfaces (the light pink panel above stays for the light theme).
+   The seam gradient is taller and eases through mid-opacity stops so the dark
+   section before it merges into the panel with no visible band. */
+html:not(.light) .tw {
+  background: #14060f;
+  color: #ffe9f4;
+}
+html:not(.light) .tw::before,
+html.light .tw::before {
+  height: min(440px, 52vh);
+  background: linear-gradient(
+    180deg,
+    hsl(var(--background)) 0%,
+    hsl(var(--background) / 0.85) 30%,
+    hsl(var(--background) / 0.45) 62%,
+    hsl(var(--background) / 0) 100%
+  );
+}
+/* bottom seam: the panel (and the drifting cards, which were cut off in a hard
+   line) fades into the page background the FAQ below sits on, so the two
+   sections read as one surface. Sits over the stage; eased stops so the fade
+   has no visible band. Both themes (--background flips with the theme). */
+.tw::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: min(300px, 34vh);
+  background: linear-gradient(
+    0deg,
+    hsl(var(--background)) 0%,
+    hsl(var(--background) / 0.9) 22%,
+    hsl(var(--background) / 0.6) 50%,
+    hsl(var(--background) / 0.25) 76%,
+    hsl(var(--background) / 0) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+html:not(.light) .tw::after { height: min(420px, 48vh); }
+html:not(.light) .tw__lead { color: rgba(255, 233, 244, 0.62); }
+html:not(.light) .tw__rating-note { color: rgba(255, 233, 244, 0.78); }
+html:not(.light) .tw__trust { color: rgba(255, 233, 244, 0.48); }
+
+.tw__stage {
+  position: relative;
+  z-index: 1;
+}
+.tw__stage {
+  display: grid;
+  /* intro | four-column wall; the intro sits further left and the wall gets a bit
+     more of the width, so the wider column gaps do not shrink the cards */
+  grid-template-columns: minmax(300px, 5.4fr) 9.6fr;
+  gap: clamp(28px, 3.5vw, 56px);
+  align-items: center;
+  /* taller than one viewport, so the panel keeps filling the screen while it
+     scrolls through instead of immediately revealing the dark section below */
+  height: 125vh;
+  height: 125svh;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 84px clamp(16px, 3vw, 40px) 0 clamp(16px, 2vw, 32px);
+}
+
+/* ── left: intro copy ── */
+.tw__intro {
+  text-align: left;
+  padding-bottom: 32px;
+}
+.tw__chip {
+  display: inline-block;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #d92869;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 1px 2px rgba(51, 18, 38, 0.08);
+}
+.tw__title {
+  margin: 16px 0 0;
+  font-family: var(--font-poppins, "Geist", Arial, sans-serif);
+  font-size: clamp(2.3rem, 4vw, 4.25rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+}
+.tw__lead {
+  margin: 20px 0 0;
+  max-width: 34rem;
+  font-size: clamp(1rem, 1.25vw, 1.25rem);
+  line-height: 1.65;
+  color: rgba(51, 18, 38, 0.62);
+}
+.tw__rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 26px;
+}
+.tw__rating .tw-stars { margin: 0; font-size: 1.15rem; }
+.tw__rating-note {
+  font-size: clamp(0.9rem, 1vw, 1.05rem);
+  font-weight: 600;
+  color: rgba(51, 18, 38, 0.75);
+}
+.tw__trust {
+  margin: 10px 0 0;
+  font-size: clamp(0.85rem, 0.9vw, 0.95rem);
+  color: rgba(51, 18, 38, 0.5);
+}
+
+/* ── right: the wall, four independent columns, faded at both edges ── */
+.tw__wall {
+  align-self: stretch;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  /* a little more air between the columns (cards within a column keep 16px) */
+  column-gap: clamp(22px, 1.8vw, 32px);
+  row-gap: 16px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 48px, #000 calc(100% - 40px), transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 48px, #000 calc(100% - 40px), transparent 100%);
+  /* the whole wall leans slightly to the right */
+  transform: rotate(6deg);
+  transform-origin: 50% 50%;
+}
+.tw__col {
+  min-width: 0;
+  min-height: 0;
+}
+.tw__track {
+  display: flex;
+  flex-direction: column;
+}
+.tw__set {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 16px;
+}
+
+/* columns 1 & 3 drift up, 2 drifts down, each with its own speed and phase
+   (--tw-dur / --tw-off inline on the column). The drift is driven by
+   js/testimonials.js so a column can also be grabbed and slid with the mouse;
+   hovering a column slows it to a stop. */
+.tw__track { will-change: transform; }
+.tw__col { cursor: grab; user-select: none; -webkit-user-select: none; }
+.tw__col.is-dragging { cursor: grabbing; }
+.tw__col img { -webkit-user-drag: none; }
+
+/* ── cards ── */
+.tw-card {
+  border-radius: 22px;
+  padding: 24px 22px;
+  background: #ffffff;
+  color: #331226;
+  box-shadow: 0 2px 6px rgba(51, 18, 38, 0.05), 0 14px 34px rgba(51, 18, 38, 0.07);
+  user-select: none;
+}
+.tw-tag {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: #fce4ee;
+  color: #d92869;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+.tw-heading {
+  margin: 0 0 10px;
+  font-family: var(--font-poppins, "Geist", Arial, sans-serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+.tw-text {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.65;
+  color: rgba(51, 18, 38, 0.62);
+}
+.tw-text + .tw-text { margin-top: 8px; }
+.tw-stars {
+  margin-bottom: 10px;
+  color: #f6a41f;
+  font-size: 0.95rem;
+  letter-spacing: 0.18em;
+  line-height: 1;
+}
+.tw-stars:last-child { margin-bottom: 0; }
+.tw-text + .tw-stars, .tw-heading + .tw-stars { margin-top: 14px; }
+.tw-quote {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: rgba(51, 18, 38, 0.8);
+}
+.tw-who {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+.tw-who__meta { display: flex; flex-direction: column; min-width: 0; }
+.tw-who__meta strong { font-size: 0.82rem; font-weight: 600; line-height: 1.3; }
+.tw-who__meta em { font-style: normal; font-size: 0.72rem; color: rgba(51, 18, 38, 0.5); line-height: 1.35; }
+.tw-ava {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+.tw-ava--a { background: linear-gradient(145deg, #e345c4, #ff9478); }
+.tw-ava--b { background: linear-gradient(145deg, #5b3cc4, #8a5cf0); }
+.tw-ava--c { background: linear-gradient(145deg, #f73679, #ff8f6b); }
+.tw-ava--d { background: linear-gradient(145deg, #c81062, #ff7a95); }
+.tw-ava--e { background: linear-gradient(145deg, #2b1626, #6d3a5c); }
+.tw-ava--f { background: linear-gradient(145deg, #d92869, #f973a2); }
+
+/* the big decorative quote glyph card */
+.tw-mark {
+  display: block;
+  height: 34px;
+  color: #d92869;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 64px;
+  line-height: 0.9;
+}
+
+/* ── stat cards: one colour way each, from the site's palette ── */
+.tw-card--stat .tw-kicker {
+  margin: 0 0 14px;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+.tw-card--stat .tw-big {
+  margin: 0 0 14px;
+  font-family: var(--font-poppins, "Geist", Arial, sans-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+}
+.tw-card--stat .tw-pill {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 6px 13px;
+  border-radius: 999px;
+  background: var(--tw-pill, #fce4ee);
+  color: var(--tw-pill-ink, #d92869);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.tw-card--stat .tw-note {
+  margin: 12px 0 0;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+.tw-card--grad   { background: linear-gradient(145deg, #e345c4 0%, #ff9478 100%); color: #ffffff; --tw-pill: #ffffff; --tw-pill-ink: #b3268c; }
+.tw-card--plum   { background: #2b1626; color: #ffe3f3; --tw-pill: linear-gradient(90deg, #fd44d5, #fd8365); --tw-pill-ink: #ffffff; }
+.tw-card--pink   { background: #f73679; color: #ffffff; --tw-pill: #ffffff; --tw-pill-ink: #c21a55; }
+.tw-card--violet { background: linear-gradient(160deg, #5b3cc4 0%, #8a5cf0 100%); color: #f3ecff; --tw-pill: #ff9478; --tw-pill-ink: #2a1060; }
+
+/* ── responsive: 4 wall columns → 3 → 2, then the intro stacks above the wall ── */
+@media (max-width: 1279px) {
+  .tw__stage { grid-template-columns: minmax(280px, 5fr) 7fr; }
+  .tw__wall { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .tw__col:nth-child(4) { display: none; }
+}
+@media (max-width: 1023px) {
+  .tw__col:nth-child(4) { display: none; }
+  .tw__wall { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tw__col:nth-child(3) { display: none; }
+}
+@media (max-width: 767px) {
+  .tw__stage {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding-top: 72px;
+  }
+  .tw__intro {
+    flex: 0 0 auto;
+    text-align: center;
+    padding-bottom: 22px;
+  }
+  .tw__lead { margin-left: auto; margin-right: auto; }
+  .tw__rating { justify-content: center; }
+  .tw__wall {
+    flex: 1 1 auto;
+    align-self: auto;
+    gap: 12px;
+  }
+  .tw__set { gap: 12px; padding-bottom: 12px; }
+  .tw-card { border-radius: 18px; padding: 18px 16px; }
+}

@@ -1,0 +1,97 @@
+@keyframes lia-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes lia-res-ballS1 {
+  0%        { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.18); box-shadow: none; }
+  2%        { background: #fff; border-color: #fff; box-shadow: 0 0 0 0 rgba(255,255,255,0.6); }
+  10%       { background: #fff; border-color: #fff; box-shadow: 0 0 0 8px rgba(255,255,255,0); }
+  14%, 92%  { background: #6dffb6; border-color: #6dffb6; box-shadow: none; }
+  100%      { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.18); }
+}
+@keyframes lia-res-ballS2 {
+  0%, 25%   { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.18); }
+  27%       { background: #fff; border-color: #fff; box-shadow: 0 0 0 0 rgba(255,255,255,0.6); }
+  35%       { background: #fff; border-color: #fff; box-shadow: 0 0 0 8px rgba(255,255,255,0); }
+  39%, 92%  { background: #6dffb6; border-color: #6dffb6; }
+  100%      { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.18); }
+}
+@keyframes lia-res-ballS3 {
+  0%, 50%   { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.18); }
+  52%       { background: #fff; border-color: #fff; box-shadow: 0 0 0 0 rgba(255,255,255,0.6); }
+  60%       { background: #fff; border-color: #fff; box-shadow: 0 0 0 8px rgba(255,255,255,0); }
+  64%, 92%  { background: #6dffb6; border-color: #6dffb6; }
+  100%      { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.18); }
+}
+@keyframes lia-res-ballS4 {
+  0%, 75%   { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.18); }
+  77%       { background: #fff; border-color: #fff; box-shadow: 0 0 0 0 rgba(255,255,255,0.6); }
+  85%       { background: #fff; border-color: #fff; box-shadow: 0 0 0 8px rgba(255,255,255,0); }
+  89%, 95%  { background: #6dffb6; border-color: #6dffb6; }
+  100%      { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.18); }
+}
+@keyframes lia-res-checkS1 { 0%, 13% { opacity: 0; } 14%, 92% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes lia-res-checkS2 { 0%, 38% { opacity: 0; } 39%, 92% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes lia-res-checkS3 { 0%, 63% { opacity: 0; } 64%, 92% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes lia-res-checkS4 { 0%, 88% { opacity: 0; } 89%, 95% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes lia-res-lblS1 { 0%       { color: rgba(255,255,255,0.7); } 2%,  95% { color: #fff; } 100% { color: rgba(255,255,255,0.7); } }
+@keyframes lia-res-lblS2 { 0%, 25%  { color: rgba(255,255,255,0.7); } 27%, 95% { color: #fff; } 100% { color: rgba(255,255,255,0.7); } }
+@keyframes lia-res-lblS3 { 0%, 50%  { color: rgba(255,255,255,0.7); } 52%, 95% { color: #fff; } 100% { color: rgba(255,255,255,0.7); } }
+@keyframes lia-res-lblS4 { 0%, 75%  { color: rgba(255,255,255,0.7); } 77%, 95% { color: #fff; } 100% { color: rgba(255,255,255,0.7); } }
+@keyframes lia-res-dashD1 {
+  0%, 14%  { transform: scaleX(0); opacity: 0; }
+  25%      { transform: scaleX(1); opacity: 1; }
+  92%      { transform: scaleX(1); opacity: 1; }
+  100%     { transform: scaleX(0); opacity: 0; }
+}
+@keyframes lia-res-dashD2 {
+  0%, 39%  { transform: scaleX(0); opacity: 0; }
+  50%      { transform: scaleX(1); opacity: 1; }
+  92%      { transform: scaleX(1); opacity: 1; }
+  100%     { transform: scaleX(0); opacity: 0; }
+}
+@keyframes lia-res-dashD3 {
+  0%, 64%  { transform: scaleX(0); opacity: 0; }
+  75%      { transform: scaleX(1); opacity: 1; }
+  92%      { transform: scaleX(1); opacity: 1; }
+  100%     { transform: scaleX(0); opacity: 0; }
+}
+@keyframes lia-res-confirmBlink {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(109,255,182,0); }
+  50%      { box-shadow: 0 0 14px rgba(109,255,182,0.45); }
+}
+@keyframes lia-res-confirmDot {
+  0%, 100% { transform: scale(1);    box-shadow: 0 0 4px #6dffb6;  opacity: 1; }
+  50%      { transform: scale(1.25); box-shadow: 0 0 10px #6dffb6; opacity: 0.85; }
+}
+.lia-res-ball-s1 { animation: lia-res-ballS1 8s ease-in-out infinite; }
+.lia-res-ball-s2 { animation: lia-res-ballS2 8s ease-in-out infinite; }
+.lia-res-ball-s3 { animation: lia-res-ballS3 8s ease-in-out infinite; }
+.lia-res-ball-s4 { animation: lia-res-ballS4 8s ease-in-out infinite; }
+.lia-res-check-s1 { animation: lia-res-checkS1 8s ease-in-out infinite; }
+.lia-res-check-s2 { animation: lia-res-checkS2 8s ease-in-out infinite; }
+.lia-res-check-s3 { animation: lia-res-checkS3 8s ease-in-out infinite; }
+.lia-res-check-s4 { animation: lia-res-checkS4 8s ease-in-out infinite; }
+.lia-res-lbl-s1 { animation: lia-res-lblS1 8s ease-in-out infinite; }
+.lia-res-lbl-s2 { animation: lia-res-lblS2 8s ease-in-out infinite; }
+.lia-res-lbl-s3 { animation: lia-res-lblS3 8s ease-in-out infinite; }
+.lia-res-lbl-s4 { animation: lia-res-lblS4 8s ease-in-out infinite; }
+.lia-res-dash {
+  flex: 1; height: 1px;
+  background: linear-gradient(to right, rgba(255,255,255,0.18), rgba(255,255,255,0.04));
+  position: relative; overflow: hidden;
+}
+.lia-res-dash::after {
+  content: ""; position: absolute; inset: 0;
+  background: #6dffb6;
+  transform-origin: left center;
+  transform: scaleX(0); opacity: 0;
+}
+.lia-res-dash-1::after { animation: lia-res-dashD1 8s ease-in-out infinite; }
+.lia-res-dash-2::after { animation: lia-res-dashD2 8s ease-in-out infinite; }
+.lia-res-dash-3::after { animation: lia-res-dashD3 8s ease-in-out infinite; }
+.lia-res-confirm-pill { animation: lia-res-confirmBlink 2.4s ease-in-out infinite; }
+.lia-res-confirm-dot  { animation: lia-res-confirmDot 2.4s ease-in-out infinite; }
+.lia-res-rise-0 { animation: lia-rise 0.7s 0.0s both; }
+.lia-res-rise-1 { animation: lia-rise 0.7s 0.1s both; }
+.lia-res-rise-2 { animation: lia-rise 0.7s 0.2s both; }

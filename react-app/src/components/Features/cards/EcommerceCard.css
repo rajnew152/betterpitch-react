@@ -1,0 +1,55 @@
+@keyframes lia-cs-r0 {
+  0%     { opacity:0; transform:translateY(12px); }
+  
+  7.3% { opacity:1; transform:translateY(0); }
+  68.2%{ opacity:1; transform:translateY(0); }
+  77.3%{ opacity:0; transform:translateY(-6px); }
+  100%   { opacity:0; transform:translateY(12px); }
+}
+.lia-cs-row-0 { animation: lia-cs-r0 11s ease-in-out infinite backwards; }
+
+@keyframes lia-cs-r1 {
+  0%     { opacity:0; transform:translateY(12px); }
+  10% { opacity:0; transform:translateY(12px); }
+  15.5% { opacity:1; transform:translateY(0); }
+  68.2%{ opacity:1; transform:translateY(0); }
+  77.3%{ opacity:0; transform:translateY(-6px); }
+  100%   { opacity:0; transform:translateY(12px); }
+}
+.lia-cs-row-1 { animation: lia-cs-r1 11s ease-in-out infinite backwards; }
+
+@keyframes lia-cs-r2 {
+  0%     { opacity:0; transform:translateY(12px); }
+  18.2% { opacity:0; transform:translateY(12px); }
+  23.6% { opacity:1; transform:translateY(0); }
+  68.2%{ opacity:1; transform:translateY(0); }
+  77.3%{ opacity:0; transform:translateY(-6px); }
+  100%   { opacity:0; transform:translateY(12px); }
+}
+.lia-cs-row-2 { animation: lia-cs-r2 11s ease-in-out infinite backwards; }
+
+  @keyframes lia-cs-sum {
+    0%      { opacity:0; transform:translateY(16px); }
+    27.3%{ opacity:0; transform:translateY(16px); }
+    33.6%{ opacity:1; transform:translateY(0); }
+    68.2%{ opacity:1; }
+    77.3%{ opacity:0; transform:translateY(-6px); }
+    100%    { opacity:0; transform:translateY(16px); }
+  }
+  .lia-cs-summary { animation: lia-cs-sum 11s ease-in-out infinite backwards; }
+  /* Peak glow moved to a ::after overlay, faded in/out via opacity
+     instead of animating box-shadow directly. */
+  @keyframes lia-cs-plus-glow {
+    0%, 100% { opacity: 0; }
+    50%      { opacity: 1; }
+  }
+  .lia-cs-plus { position: relative; box-shadow: 0 2px 8px rgba(0,200,170,0.45); }
+  .lia-cs-plus::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 2px 18px rgba(0,200,170,0.85), 0 0 28px rgba(0,200,170,0.35);
+    opacity: 0;
+    animation: lia-cs-plus-glow 2s ease-in-out infinite;
+  }

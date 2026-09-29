@@ -1,0 +1,11 @@
+/* =============================================================================
+   perf.css — rendering hints only (no visual change). Loaded last.
+   ============================================================================= */
+
+/* Endless marquees (hero rail, testimonials track) stop ticking while they cannot
+   be seen: .lia-offscreen is toggled by js/main.js (IntersectionObserver),
+   .lia-faded by js/hero.js once the pinned hero has faded the rail out. */
+.lia-offscreen,
+.lia-faded {
+  animation-play-state: paused !important;
+}

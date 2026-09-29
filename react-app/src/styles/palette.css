@@ -1,0 +1,239 @@
+/* =============================================================================
+   palette.css — Better Pitch warm palette for the few colours that live in
+   images (colour values in the stylesheets, scripts and markup are re-mapped by
+   tools/palette.js). hue-rotate moves the violet map artwork into the pink range.
+   ============================================================================= */
+.footer-globe-texture { filter: hue-rotate(78deg) saturate(1.05); }
+
+/* feather over the industries wheel's top edge (js/section-seams.js), in the
+   manifesto section's bottom colour, so the two sections merge without a line */
+.bp-seam {
+  --seam-from: #f4e9ee;
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 30;
+  height: 42vh;
+  pointer-events: none;
+  /* the fade is a mask over a flat fill: a gradient of color-mix() stops rendered
+     almost opaque in Chromium/Edge and ended the band in a hard line */
+  background: var(--seam-from);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.82) 22%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.18) 78%, transparent 100%);
+          mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.82) 22%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.18) 78%, transparent 100%);
+}
+@media (max-width: 600px) { .bp-seam { height: 28vh; } }
+/* the band is a direct child div of the wheel section: keep it out of the light
+   theme's "#section-cinematic-project > div" wash below, or it turns peach and
+   no longer matches the manifesto colour it starts from */
+html.light #section-cinematic-project > .bp-seam { background-color: var(--seam-from); }
+
+/* =============================================================================
+   Colour pass to the reference PDF (magenta → coral accents, rosy/peach light
+   surfaces, deeper blacks on the dark sections). Colour only: no layout changes.
+   ============================================================================= */
+
+/* ROI calculator: slider fills, selected pill, gauge arc and knob */
+/* second selector: the same inline gradient as serialized by the CSSOM (React build) */
+#roi-calculator [style*="linear-gradient(90deg, #b62158, #ed3a7e)"],
+#roi-calculator [style*="linear-gradient(90deg, rgb(182, 33, 88), rgb(237, 58, 126))"] { background: linear-gradient(90deg, #e345c4, #ff9478) !important; }
+#roi-calculator .bg-\[\#6d28d9\] { background: linear-gradient(90deg, #fd44d5, #fd8365); box-shadow: 0 0 18px rgba(253, 68, 213, 0.4); }
+#roi-calculator #arc-grad stop:nth-child(1) { stop-color: #c943b1; }
+#roi-calculator #arc-grad stop:nth-child(2) { stop-color: #e8627f; }
+#roi-calculator #arc-grad stop:nth-child(3) { stop-color: #ff8a6e; }
+#roi-calculator #dot-glow stop:nth-child(1) { stop-color: rgba(250, 120, 210, 0.7); }
+#roi-calculator #dot-glow stop:nth-child(2) { stop-color: rgba(250, 120, 210, 0); }
+#roi-calculator #outer-ring-glow stop:nth-child(1) { stop-color: rgba(250, 120, 210, 0.18); }
+#roi-calculator #outer-ring-glow stop:nth-child(2) { stop-color: rgba(250, 120, 210, 0); }
+#roi-calculator circle[fill="#d92869"] { fill: #f764b8; }
+#roi-calculator circle[fill="#ed3a7e"] { fill: #f870c0; }
+#roi-calculator circle[fill="#fdb5d7"] { fill: #fec9f2; }
+html.light #roi-calculator .roi-gauge-track { stroke: #fbd6f0; }
+html.light #roi-calculator .text-foreground { color: #574957; }
+
+/* industries wheel (light theme): rosy / peach wash, pink → red titles */
+html.light #section-cinematic-project,
+html.light #section-cinematic-project > div { background-color: #fff0ee; }
+html.light #section-cinematic-project > div > .pointer-events-none.absolute.inset-0:first-child {
+  background:
+    radial-gradient(circle at 50% 22%, rgba(247, 54, 121, 0.30), transparent 42%),
+    radial-gradient(circle at 22% 40%, rgba(227, 69, 196, 0.20), transparent 38%),
+    radial-gradient(circle at 80% 40%, rgba(255, 122, 69, 0.22), transparent 38%),
+    linear-gradient(180deg, #fdf9fb 0%, #f9dfe7 18%, #fbe0e2 40%, #fdeceb 70%, #fdf9fb 100%);
+}
+/* the glass segments were nearly invisible (inline .light rule: opacity .05);
+   a little more body so the wheel and its dividers read against the wash */
+html.light #section-cinematic-project .cps-wheel-glass { opacity: 0.13; }
+html.light #section-cinematic-project .light\:text-\[\#1e1442\] {
+  background: linear-gradient(90deg, #f2167c, #ff2d1e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* descriptions: a deep rose instead of light pink-on-pink, for readable contrast */
+html.light #section-cinematic-project .light\:text-\[\#4b4560\]\/85 { color: #8f2352; }
+
+/* dark sections: deeper blacks as in the reference */
+.tk, .tk__container { background: #151519; }
+.nx, .nx__container { background: #000000; }
+/* day theme: the closing "Ready when you are…" section sits on the page's light
+   ground (the same #fdf9fb as the sections above it) instead of black; the cream
+   half of the sentence turns to the dark ink used by the other light sections,
+   and the gradient's pale gold start is deepened so it reads on the light ground */
+html.light .nx, html.light .nx__container {
+  /* the soft pink wash of the testimonials / FAQ area: pale at the top (it scrolls
+     in out of the FAQ), rosy through the middle, with pink and magenta glows */
+  background:
+    radial-gradient(ellipse 55% 45% at 32% 55%, rgba(247, 54, 121, 0.10), transparent 70%),
+    radial-gradient(ellipse 50% 42% at 78% 42%, rgba(227, 69, 196, 0.08), transparent 70%),
+    linear-gradient(180deg, #fcf2f6 0%, #fcf2f6 14%, #f9e2ec 50%, #fae8f0 78%, #fcf1f5 100%);
+}
+/* FAQ → closing section (day theme): the FAQ's bottom eases into the closing
+   section's top colour (#fcf2f6), so the two read as one surface. The band sits
+   behind the FAQ content (isolation + z-index -1), above its own background. */
+html.light #section-faq { isolation: isolate; }
+html.light #section-faq::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: min(420px, 45vh);
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(252, 242, 246, 0) 0%,
+    rgba(252, 242, 246, 0.35) 30%,
+    rgba(252, 242, 246, 0.75) 62%,
+    #fcf2f6 100%
+  );
+}
+html.light .nx__text { fill: #1f1d1d; }
+html.light #nxTextGradient stop:nth-child(1) { stop-color: #e0892e; }
+
+/* journey → Platform deck: the journey section ends on pure black while the deck's
+   stage is #151519 with brand glows in its top corners (css/card-flip.css), so the
+   two met in a hard line and read as separate slabs. A feathered black band over the
+   stage's top edge lets the grey and the glows rise out of the black gradually (same
+   mask-over-flat-fill recipe as .bp-seam above — gradient stops of color-mix() banded
+   in Chromium). Dark theme only: in the light theme both sections already sit on the
+   same #fdf9fb ground, so there is no seam to hide. */
+html:not(.light) #section-toolkit .tk__container::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 0;
+  height: 36vh;
+  pointer-events: none;
+  background: #000000;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.82) 22%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.18) 78%, transparent 100%);
+          mask-image: linear-gradient(180deg, #000 0%, rgba(0, 0, 0, 0.82) 22%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.18) 78%, transparent 100%);
+}
+/* and soften the deck's own ground the same way: the flat #151519 becomes a vertical
+   ramp that starts black at the seam and settles on #151519 by mid-stage, so even the
+   base colour has no visible step against the section above */
+html:not(.light) #section-toolkit .tk__container {
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 105%, rgba(247, 54, 121, 0.30), transparent 70%),
+    radial-gradient(circle at 12% 18%, rgba(155, 124, 255, 0.20), transparent 42%),
+    radial-gradient(circle at 88% 22%, rgba(255, 122, 69, 0.18), transparent 42%),
+    linear-gradient(180deg, #000000 0%, #0a0a0d 18%, #151519 42%, #151519 100%);
+}
+
+/* ROI stage → FAQ: the FAQ's top glow is no longer cut off at the section's top
+   edge; it spills up over the ROI stage (sides and bottom stay clipped), so the
+   two light sections read as one surface */
+#section-faq {
+  position: relative;
+  z-index: 2;
+  overflow: visible;
+  clip-path: inset(-360px 0 0 0);
+}
+
+/* Toolkit cover (the transition card's fill that grows over the stage before the
+   ROI calculator fades in): the ROI stage's own light background, not the cream */
+:root { --tk-cover: #fdf9fb; }
+/* night theme: the cover is the manifesto's dark top (--mf-above) instead of white */
+html:not(.light) { --tk-cover: #000000; }
+
+/* header contrast (js/theme.js sets bp-hdr-on-dark / bp-hdr-on-light from the
+   section behind the header): readable Menu / Get in touch / theme controls */
+#staggered-menu .sm-toggle, #staggered-menu .sm-extra { transition: color 0.3s ease; }
+#staggered-menu .sm-get-in-touch { transition: color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease; }
+html.bp-hdr-on-dark #staggered-menu .sm-toggle[aria-expanded="false"],
+html.bp-hdr-on-dark #staggered-menu .sm-extra,
+html.bp-hdr-on-dark #staggered-menu .sm-get-in-touch { color: #ffffff !important; }
+html.bp-hdr-on-light #staggered-menu .sm-toggle[aria-expanded="false"],
+html.bp-hdr-on-light #staggered-menu .sm-extra,
+html.bp-hdr-on-light #staggered-menu .sm-get-in-touch { color: #0a0a0f !important; }
+
+/* Testimonials ("tk tm"): the closing section's pure black, so the two run together */
+#testimonials.tk, #testimonials .tk__container { background: #000000; }
+
+/* journey stage (light theme): starts on the page's own light colour instead of
+   the dark ground, so the industries wheel runs straight into "Emotion / meets"
+   with no dark screens; the sentences use dark ink ("outcomes." keeps its cream
+   letters, which read through the gradient cards). !important beats the inline
+   colours js/journey.js sets on the stage while it plays. */
+html.light .traj__container { background-color: #fdf9fb !important; }
+html.light .traj__sentence:not(.is-both) { color: #1f1d1d; }
+
+/* journey stage (night theme): stays on the dark ground instead of js/journey.js's
+   cream crossfade, and the sentences keep cream letters to read on it */
+html.dark .traj__container { background-color: #000000 !important; }
+html.dark .traj__sentence:not(.is-both) { color: #f5e7df !important; }
+
+/* industries wheel → journey (light theme): the wheel's bottom edge fades into the
+   page colour the journey stage starts on, instead of the wheel being cut off */
+html.light #section-cinematic-project > div::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 25;
+  height: 5vh;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    rgba(253, 249, 251, 0) 0%,
+    rgba(253, 249, 251, 0.55) 45%,
+    rgba(253, 249, 251, 0.9) 75%,
+    #fdf9fb 100%);
+}
+html.light #section-cinematic-project .bg-gradient-to-t.light\:from-white {
+  background-image: linear-gradient(to top, #fdf9fb, rgba(253, 249, 251, 0.9), transparent);
+}
+
+/* manifesto (now between the Platform deck and the ROI calculator, light theme): it ends on
+   the page colour the ROI section starts on; the wheel-top feather band (js/section-seams.js)
+   reads the same token, which also matches the feature section now above the wheel */
+html.light .mf { --mf-below: #fdf9fb; }
+
+/* industries wheel segments: the feature cards' colour way — orange at the top
+   corner, hot red through the middle, magenta at the bottom — on every segment
+   (each glass path gets the gradient across its own box), with white copy */
+#section-cinematic-project .cps-wheel-glass,
+html.light #section-cinematic-project .cps-wheel-glass { opacity: 1; }
+/* the segment colours themselves (the voice demo card's gradient, opacity and corner
+   glows) are defined on the SVG gradients in components/Industries/Industries.jsx */
+#section-cinematic-project .cps-wheel-divider,
+html.light #section-cinematic-project .cps-wheel-divider { stroke: rgba(255, 255, 255, 0.55); stroke-opacity: 1; }
+#section-cinematic-project .cps-wheel-hairline,
+html.light #section-cinematic-project .cps-wheel-hairline { stroke: #ffffff; stroke-opacity: 0.25; }
+/* copy on the segments */
+#section-cinematic-project [data-cinematic-wheel-detail] h3,
+html.light #section-cinematic-project .light\:text-\[\#1e1442\] {
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: #ffffff;
+}
+#section-cinematic-project [data-cinematic-wheel-detail] p,
+html.light #section-cinematic-project .light\:text-\[\#4b4560\]\/85 { color: rgba(255, 255, 255, 0.88); }
+#section-cinematic-project [data-cinematic-wheel-detail] .bg-gradient-to-r { background: rgba(255, 255, 255, 0.7); }
+
+/* industries wheel, NIGHT theme only (html.dark): the segments carry the voice demo
+   card's colours (css/card-demo.css) — red → magenta glass with an orange bleed at
+   the top corner and a deep magenta one at the bottom, white dividers and copy.
+   The day theme keeps the coral → pink gradient above. */
+html.dark #section-cinematic-project .cps-wheel-glass { opacity: 1; }
+html.dark #section-cinematic-project .cps-wheel-divider { stroke: rgba(255, 255, 255, 0.45); stroke-opacity: 1; }
+html.dark #section-cinematic-project .cps-wheel-hairline { stroke: #ffffff; stroke-opacity: 0.22; }
+html.dark #section-cinematic-project [data-cinematic-wheel-detail] h3 { color: #ffffff; }
+html.dark #section-cinematic-project [data-cinematic-wheel-detail] p { color: rgba(255, 255, 255, 0.9); }
+html.dark #section-cinematic-project [data-cinematic-wheel-detail] .bg-gradient-to-r { background: rgba(255, 255, 255, 0.75); }

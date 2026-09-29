@@ -1,0 +1,166 @@
+.light .roi-gauge-track { stroke: #f2dde6; }
+
+/* =============================================================================
+   ROI calculator motion (logic: legacy/roi.js). Intro states live under
+   .roi-anim and play when .is-in lands; roi.js removes both once the intro is
+   over, so everything below them is the resting / interactive behaviour.
+   Individual transform properties (translate / scale / rotate) are used so they
+   compose with Tailwind's transforms and LiaMotion's inline presses.
+   ============================================================================= */
+#roi-calculator {
+  --roi-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --roi-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ---------------------------------------------------------------- intro */
+#roi-calculator .roi-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.08em;   /* keep descenders inside the mask */
+  margin-bottom: -0.08em;
+}
+#roi-calculator .roi-mask__in { display: inline-block; }
+#roi-calculator.roi-anim .roi-mask__in {
+  translate: 0 110%;
+  rotate: 4deg;
+  transition: translate 1s var(--roi-ease), rotate 1s var(--roi-ease);
+  transition-delay: var(--roi-d, 0s);
+}
+#roi-calculator.roi-anim .roi-a {
+  opacity: 0;
+  translate: 0 28px;
+  filter: blur(6px);
+  transition: opacity 0.9s var(--roi-ease), translate 0.9s var(--roi-ease), filter 0.9s var(--roi-ease);
+  transition-delay: var(--roi-d, 0s);
+}
+#roi-calculator.roi-anim .roi-pop {
+  opacity: 0;
+  scale: 0.7;
+  transition: opacity 0.5s var(--roi-ease), scale 0.7s var(--roi-spring);
+  transition-delay: var(--roi-d, 0s);
+}
+#roi-calculator.roi-anim .roi-tick {
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+  transition-delay: var(--roi-d, 0s);
+}
+#roi-calculator.roi-anim .roi-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.3s var(--roi-ease);
+  transition-delay: var(--roi-d, 0s);
+}
+#roi-calculator.roi-anim .roi-line {
+  scale: 0 1;
+  transform-origin: left center;
+  transition: scale 1s var(--roi-ease);
+  transition-delay: var(--roi-d, 0s);
+}
+#roi-calculator.roi-anim .roi-spin {
+  opacity: 0;
+  scale: 0.3;
+  rotate: -180deg;
+  transition: opacity 0.5s ease-out, scale 0.8s var(--roi-spring), rotate 0.8s var(--roi-ease);
+  transition-delay: var(--roi-d, 0s);
+}
+/* the fills start empty and sweep to their value with their control */
+#roi-calculator.roi-anim:not(.is-in) .roi-fill { width: 0 !important; }
+
+
+#roi-calculator.roi-anim.is-in .roi-mask__in { translate: 0 0; rotate: 0deg; }
+#roi-calculator.roi-anim.is-in .roi-a { opacity: 1; translate: 0 0; filter: blur(0); }
+#roi-calculator.roi-anim.is-in .roi-pop { opacity: 1; scale: 1; }
+#roi-calculator.roi-anim.is-in .roi-tick { opacity: 1; }
+#roi-calculator.roi-anim.is-in .roi-draw { stroke-dashoffset: 0; }
+#roi-calculator.roi-anim.is-in .roi-line { scale: 1 1; }
+#roi-calculator.roi-anim.is-in .roi-spin { opacity: 1; scale: 1; rotate: 0deg; }
+
+/* ------------------------------------------------------ slider tracks */
+#roi-calculator .roi-fill {
+  transition: width 0.9s var(--roi-ease), filter 0.3s ease;
+  overflow: hidden;
+}
+#roi-calculator.roi-anim .roi-fill { transition-delay: var(--roi-fill-d, 0.5s), 0s; }
+#roi-calculator .roi-track.is-dragging .roi-fill { transition: width 0.12s linear, filter 0.3s ease; }
+#roi-calculator .roi-track:hover .roi-fill,
+#roi-calculator .roi-track.is-dragging .roi-fill { filter: brightness(1.1) saturate(1.1); }
+/* slow sheen across the fill */
+#roi-calculator .roi-fill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 20%, rgba(255, 255, 255, 0.28) 45%, transparent 70%);
+  translate: -100% 0;
+  animation: roi-sheen 3.6s var(--roi-ease) infinite;
+}
+/* the knob at the fill's end grows while hovered / dragged */
+#roi-calculator .roi-fill::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 9px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.35), 0 4px 14px rgba(0, 0, 0, 0.25);
+  translate: 0 -50%;
+  scale: 0.45;
+  opacity: 0.55;
+  transition: scale 0.4s var(--roi-spring), opacity 0.3s ease, box-shadow 0.4s ease;
+}
+#roi-calculator .roi-track:hover .roi-fill::after { scale: 0.75; opacity: 0.9; }
+#roi-calculator .roi-track.is-dragging .roi-fill::after {
+  scale: 0.85;
+  opacity: 1;
+  box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.14), 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+@keyframes roi-sheen {
+  0% { translate: -100% 0; }
+  55%, 100% { translate: 100% 0; }
+}
+
+/* ------------------------------------------------------ agent buttons */
+#roi-calculator :where(.space-y-8 button) {
+  transition: background-color 0.25s ease, color 0.25s ease, box-shadow 0.35s ease, translate 0.3s var(--roi-ease);
+}
+#roi-calculator :where(.space-y-8 button:hover) { translate: 0 -2px; }
+
+/* ------------------------------------------------------ figures */
+#roi-calculator .roi-bump { animation: roi-bump 0.45s var(--roi-spring); }
+@keyframes roi-bump {
+  0% { scale: 1; }
+  35% { scale: 1.14; }
+  100% { scale: 1; }
+}
+#roi-calculator .roi-big { display: inline-block; }
+#roi-calculator .roi-glow { animation: roi-glow 0.9s ease-out; }
+@keyframes roi-glow {
+  0% { text-shadow: 0 0 0 rgba(250, 120, 210, 0); }
+  30% { text-shadow: 0 0 28px rgba(250, 120, 210, 0.55); scale: 1.03; }
+  100% { text-shadow: 0 0 0 rgba(250, 120, 210, 0); scale: 1; }
+}
+
+/* ------------------------------------------------------ gauge dot */
+#roi-calculator .roi-dot { transform-box: fill-box; transform-origin: center; }
+#roi-calculator .roi-dot-glow { animation: roi-breathe 2.4s ease-in-out infinite; }
+@keyframes roi-breathe {
+  0%, 100% { scale: 1; opacity: 1; }
+  50% { scale: 1.45; opacity: 0.55; }
+}
+
+/* ------------------------------------------------------ result cards */
+#roi-calculator :where(.grid > div:last-child > .rounded-3xl) {
+  transition: translate 0.5s var(--roi-ease), box-shadow 0.5s ease;
+}
+#roi-calculator :where(.grid > div:last-child > .rounded-3xl:hover) {
+  translate: 0 -3px;
+  box-shadow: 0 24px 60px -30px rgba(250, 120, 210, 0.35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #roi-calculator .roi-fill::before,
+  #roi-calculator .roi-dot-glow { animation: none; }
+  #roi-calculator .roi-fill { transition: none; }
+}

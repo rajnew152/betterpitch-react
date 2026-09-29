@@ -1,0 +1,249 @@
+/* Scoped to this footer, and only while it is out of view. */
+.lia-footer-offscreen *,
+.lia-footer-offscreen *::before,
+.lia-footer-offscreen *::after {
+  animation-play-state: paused !important;
+}
+
+@keyframes earthRotate {
+  0%   { background-position: 0 0; }
+  100% { background-position: 3200px 0; }
+}
+@keyframes starTwinkle {
+  0%, 100% { opacity: var(--star-base-opacity); transform: scale(1); }
+  50%       { opacity: 1;                        transform: scale(1.6); }
+}
+/* backgrounds attach once the window has loaded (html.bp-loaded, src/main.jsx), off the critical path */
+html.bp-loaded .footer-globe-texture { background-image: url('../../assets/map.webp'); }
+html.bp-loaded.light .footer-globe-texture { background-image: url('../../assets/light-map3.webp'); }
+
+.footer-globe-wash { background: transparent; }
+.light .footer-globe-wash { background: rgba(255,255,255,0.16); }
+
+.footer-bottom-fade {
+  height: 42vh;
+  background: linear-gradient(to top, #ffffff 0%, #ffffff 45%, rgba(255,255,255,0.75) 70%, transparent 100%);
+}
+
+.footer-globe-shade {
+  background: radial-gradient(ellipse at 68% 42%, transparent 10%, rgba(0,0,0,0.55) 42%, rgba(0,0,0,0.93) 63%);
+}
+.light .footer-globe-shade {
+  background: radial-gradient(ellipse at 68% 42%, transparent 10%, rgba(var(--fg-rgb),0.10) 42%, rgba(var(--fg-rgb),0.28) 63%);
+}
+
+/* ------------------------------------------------------------------ CTA card
+   The card js/next.js reveals: copy on the left, the particle sphere with the
+   "AI" mark (js/footer-cta.js) centred at the right.
+   Sizes use container units so the sphere tracks the card, whatever its height. */
+.nx-footer > #section-footer.bp-cta {
+  /* no panel of its own: the card shows the section's background (black at
+     night, the pink wash by day), so it merges into the footer */
+  --cta-bg: transparent;
+  --cta-strong: #ffffff;
+  --cta-text: #9d99a4;
+  --cta-btn-bg: #ffffff;
+  --cta-btn-fg: #0b0a0d;
+  /* the small space above the copy and the globe */
+  --cta-gap: clamp(20px, 5cqh, 36px);
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  height: 100%;
+  overflow: hidden;
+  container-type: size;
+  background: var(--cta-bg);
+  font-family: "Geist", "Geist Fallback", Arial, Helvetica, sans-serif;
+}
+.light .nx-footer > #section-footer.bp-cta {
+  --cta-bg: transparent;
+  --cta-strong: #1f1d1d;
+  --cta-text: #7d6f73;
+  --cta-btn-bg: #F53521;
+  --cta-btn-fg: #ffffff;
+}
+.bp-cta__copy {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(18px, 4cqh, 28px);
+  max-width: min(34rem, 46cqw);
+  padding: var(--cta-gap) 0 0 clamp(24px, 3.2cqw, 56px);
+}
+.bp-cta__text {
+  margin: 0;
+  color: var(--cta-text);
+  font-size: clamp(18px, 1.55vw, 26px);
+  font-weight: 500;
+  line-height: 1.32;
+  letter-spacing: -0.01em;
+}
+.bp-cta__text strong { color: var(--cta-strong); font-weight: 500; }
+.bp-cta__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--cta-btn-bg);
+  color: var(--cta-btn-fg);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.bp-cta__btn:hover { transform: translateY(-1px); opacity: 0.9; }
+.bp-cta__btn svg { width: 14px; height: 14px; }
+
+/* ---- the rest of the left column: headline numbers, footer links, legal bar.
+   The column runs the card's full height so the bar sits on its bottom edge. */
+.bp-cta__copy { align-self: stretch; }
+.nx-footer > #section-footer.bp-cta { --cta-line: rgba(255, 255, 255, 0.1); --cta-link: #c9c5ce; }
+.light .nx-footer > #section-footer.bp-cta { --cta-line: rgba(31, 29, 29, 0.1); --cta-link: #5e5256; }
+
+.bp-cta__stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(12px, 1.4cqw, 24px);
+  width: 100%;
+  margin: clamp(6px, 2cqh, 22px) 0 0;
+  padding: clamp(14px, 2.6cqh, 24px) 0 0;
+  border-top: 1px solid var(--cta-line);
+  list-style: none;
+}
+.bp-cta__stats li { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.bp-cta__stats strong {
+  font-size: clamp(20px, 1.55vw, 27px);
+  font-weight: 600;
+  line-height: 1.05;
+  white-space: nowrap;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #ff6a3d, #f73679 45%, #e232db 75%, #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.light .bp-cta__stats strong { background-image: linear-gradient(90deg, #e8502f, #d81b60 45%, #b5179e 75%, #6d28d9); }
+.bp-cta__stats span { color: var(--cta-text); font-size: 12.5px; line-height: 1.35; }
+
+.bp-cta__links {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 1.4cqw, 24px);
+  width: 100%;
+}
+.bp-cta__links p {
+  margin: 0 0 10px;
+  color: var(--cta-strong);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.bp-cta__links ul { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
+.bp-cta__links a,
+.bp-cta__social a {
+  color: var(--cta-link);
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.bp-cta__links a:hover,
+.bp-cta__social a:hover { color: #f73679; }
+.light .bp-cta__links a:hover,
+.light .bp-cta__social a:hover { color: #d81b60; }
+
+.bp-cta__base {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 18px;
+  width: 100%;
+  margin-top: auto;
+  padding: 14px 0 var(--cta-gap);
+  border-top: 1px solid var(--cta-line);
+  color: var(--cta-text);
+  font-size: 12.5px;
+}
+.bp-cta__trust { opacity: 0.85; }
+.bp-cta__social { display: inline-flex; gap: 14px; margin-left: auto; }
+.bp-cta__social svg { display: block; width: 16px; height: 16px; }
+
+/* in: the bands fade up in turn once the card is revealed (.is-in, js/footer-cta.js) */
+.bp-cta__stats, .bp-cta__links, .bp-cta__base {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.bp-cta.is-in .bp-cta__stats { opacity: 1; transform: none; transition-delay: 0.1s; }
+.bp-cta.is-in .bp-cta__links { opacity: 1; transform: none; transition-delay: 0.22s; }
+.bp-cta.is-in .bp-cta__base { opacity: 1; transform: none; transition-delay: 0.34s; }
+@media (prefers-reduced-motion: reduce) {
+  .bp-cta__stats, .bp-cta__links, .bp-cta__base { opacity: 1; transform: none; transition: none; }
+}
+
+/* short cards: drop the links, then the numbers, so nothing is clipped */
+@container (max-height: 640px) { .bp-cta__links { display: none; } }
+@container (max-height: 470px) { .bp-cta__stats { display: none; } }
+@container (max-width: 1000px) {
+  .bp-cta__stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* half globe: its centre sits on the card's bottom edge, so only the upper half
+   shows, its top just --cta-gap below the card's top, and the right side runs off
+   the card. --globe is the sphere's diameter; cobe draws the sphere at 0.8 of its
+   canvas (the rest is room for the glow), so the canvas box is --globe / 0.8. */
+/* the particle sphere (js/footer-cta.js): a whole sphere centred at the right of
+   the card. The holder is the sphere's frame; the canvas bleeds half its size on
+   every side (as in the hero) so the scattering dots are never cut square — the
+   card's own rounded clip is the only edge */
+/* the card grows so the sphere fits: tall enough for a sphere 40% of the screen
+   wide (--sphere-d) plus its outer dots, never under half the viewport, never
+   over 86% of it (the
+   "Ready when you are…" line keeps its room; js/next.js measures the card) */
+div.nx-footer {
+  height: max(calc(50vh - var(--nx-inset)), min(calc(46vw + 28px), calc(86vh - var(--nx-inset))));
+}
+.bp-cta__globe {
+  /* the visible sphere is --sphere-d wide: 40% of the screen width. The holder is
+     the sphere's frame (the sphere spans 0.84 of it), placed so the sphere's right
+     edge sits 3vw inside the card */
+  --sphere-d: 40vw;
+  --globe: calc(var(--sphere-d) / 0.84);
+  position: absolute;
+  top: 50%;
+  right: calc(3vw - var(--globe) * 0.08);
+  width: var(--globe);
+  aspect-ratio: 1;
+  transform: translateY(-50%);
+}
+.bp-cta__globe > .bp-sphere-grid { inset: -8%; }
+/* narrower desktops: a little smaller, so it never reaches the copy */
+@media (max-width: 1100px) {
+  .bp-cta__globe { --sphere-d: 34vw; }
+}
+.bp-cta__canvas {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  display: block;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+}
+/* phones / narrow tablets: copy on top, the globe rising from the bottom centre */
+@media (max-width: 640px) {
+  .nx-footer > #section-footer.bp-cta { align-items: flex-start; }
+  .bp-cta__copy { max-width: 100%; padding: clamp(24px, 7cqw, 32px) clamp(20px, 6cqw, 28px) 0; }
+  .bp-cta__text { font-size: clamp(17px, 4.6vw, 21px); }
+  /* the sphere sits under the copy, centred, its lower part cut by the card edge */
+  .bp-cta__globe { --globe: min(118cqw, 96cqh); top: auto; bottom: -14cqh; right: auto; left: 50%; transform: translateX(-50%); }
+  .bp-cta__copy { padding-top: var(--cta-gap); }
+}
+/* phones: the sphere sits under the copy, so the extra bands stay out of its way */
+@media (max-width: 640px) {
+  .bp-cta__stats, .bp-cta__links, .bp-cta__base { display: none; }
+}
